@@ -7,7 +7,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class SwerveBase extends SubsystemBase {
 
-  public SwerveBase(TalonFX[] driveMotors, TalonFX[] steerMotors, Translation2d[] positions) {
-    SwerveDriveKinematics kinematics = new SwerveDriveKinematics(positions);
-  }
+    SwerveMod[] modules;
+    public SwerveBase(TalonFX[] driveMotors, TalonFX[] steerMotors, Translation2d[] positions) {
+        SwerveDriveKinematics kinematics = new SwerveDriveKinematics(positions);
+
+        for(int i=0; i<4; i++){
+            modules[i] = new SwerveMod(driveMotors[i], steerMotors[i]);
+        }
+    }
 }

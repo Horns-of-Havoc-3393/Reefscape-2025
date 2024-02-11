@@ -3,10 +3,9 @@ package frc.robot.Subsystems.Drive;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.modConstants;
@@ -15,15 +14,15 @@ import org.littletonrobotics.junction.AutoLog;
 public class ModIO {
 
   @AutoLog
-  public static class ModIOIn {
-    static double driveVelocityRPS;
-    static double driveVelocityMPS;
-    static double steerVelocityRPS;
-    static double driveCurrentAmps;
-    static double steerCurrentAmps;
-    static double driveVolts;
-    static double steerVolts;
-    static Rotation2d steerPos;
+  public class ModIOIn {
+    double driveVelocityRPS;
+    double driveVelocityMPS;
+    double steerVelocityRPS;
+    double driveCurrentAmps;
+    double steerCurrentAmps;
+    double driveVolts;
+    double steerVolts;
+    Rotation2d steerPos;
   }
 
   TalonFX drive;
@@ -61,24 +60,29 @@ public class ModIO {
   public void updateInputs(ModIOIn inputs) {
     BaseStatusSignal.refreshAll();
 
-    ModIOIn.driveVelocityRPS = driveVelocity.getValueAsDouble();
-    ModIOIn.driveVelocityMPS = driveVelocity.getValueAsDouble() / modConstants.driveRotPerMeter;
-    ModIOIn.driveCurrentAmps = driveCurrent.getValueAsDouble();
-    ModIOIn.driveVolts = driveVolts.getValueAsDouble();
+    inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
+    inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / modConstants.driveRotPerMeter;
+    inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
+    inputs.driveVolts = driveVolts.getValueAsDouble();
 
-    ModIOIn.steerVelocityRPS = steerVelocity.getValueAsDouble();
-    ModIOIn.steerPos = Rotation2d.fromRotations(steerPos.getValueAsDouble());
-    ModIOIn.steerCurrentAmps = steerCurrent.getValueAsDouble();
-    ModIOIn.steerVolts = steerVolts.getValueAsDouble();
+    inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();
+    inputs.steerPos = Rotation2d.fromRotations(steerPos.getValueAsDouble());
+    inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
+    inputs.steerVolts = steerVolts.getValueAsDouble();
   }
+
 
   public void setDriveSpeed(double speedMPS) {
     drive.setControl(driveRequest.withVelocity(speedMPS));
   }
+  public void setDriveVoltage(double volts) {drive.setControl(new VoltageOut(volts));}
 
-  public void setTurnPos(double posDegrees) {
+
+  public void setSteerPos(double posDegrees) {
     steer.setControl(steerRequest.withPosition(posDegrees));
   }
+  public void setSteerVoltage(double volts) {steer.setControl(new VoltageOut(volts));}
+
 
   public void setDriveVelPID(double s, double v,double p, double i, double d){
     dSlot0.kS = s;
@@ -91,7 +95,7 @@ public class ModIO {
     drive.getConfigurator().apply(dSlot0);
   }
 
-  public void setTurnPID(double p, double i, double d) {
+  public void setSteerPID(double p, double i, double d) {
     sSlot0.kP = p;
     sSlot0.kI = i;
     sSlot0.kD = d;

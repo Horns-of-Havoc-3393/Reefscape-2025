@@ -15,7 +15,7 @@ public class SwerveBase extends SubsystemBase {
   PosIONavX posIO;
   PosIOInAutoLogged inputs;
 
-  SwerveMod[] modules;
+  SwerveMod[] modules = new SwerveMod[4];
 
   SwerveDriveKinematics kinematics;
 

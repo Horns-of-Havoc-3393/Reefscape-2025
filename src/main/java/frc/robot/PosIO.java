@@ -14,18 +14,18 @@ public class PosIO {
 
     @AutoLog
     public class PosIOIn {
-        Rotation2d xGyro = new Rotation2d(0.0);
-        Rotation2d yGyro = new Rotation2d(0.0);
-        Rotation2d zGyro = new Rotation2d(0.0);
+        public Rotation2d xGyro = new Rotation2d(0.0);
+        public Rotation2d yGyro = new Rotation2d(0.0);
+        public Rotation2d zGyro = new Rotation2d(0.0);
 
-        double xAccel = 0.0;
-        double yAccel = 0.0;
-        double zAccel = 0.0;
+        public double xAccel = 0.0;
+        public double yAccel = 0.0;
+        public double zAccel = 0.0;
 
-        double kGain = 0.0;
-        double estX = 0.0;
-        double estY = 0.0;
-        double estZ = 0.0;
+        public double kGain = 0.0;
+        public double estX = 0.0;
+        public double estY = 0.0;
+        public double estZ = 0.0;
     }
 
 

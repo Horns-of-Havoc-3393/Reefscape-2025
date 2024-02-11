@@ -8,7 +8,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
-import frc.robot.Constants.modConstants;
+import frc.robot.Constants.driveConstants;
 import org.littletonrobotics.junction.AutoLog;
 
 public class ModIO {
@@ -61,7 +61,7 @@ public class ModIO {
     BaseStatusSignal.refreshAll();
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
-    inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / modConstants.driveRotPerMeter;
+    inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / driveConstants.driveRotPerMeter;
     inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
     inputs.driveVolts = driveVolts.getValueAsDouble();
 

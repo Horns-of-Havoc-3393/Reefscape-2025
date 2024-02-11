@@ -23,8 +23,9 @@ package frc.robot;
  */
 public final class Constants {
 
-  public static final class modConstants {
+  public static final class driveConstants {
     public static final double driveRotPerMeter = 1.0;
+    public static final double maxSpeedMPS = 10;
   }
 
   public static final Mode currentMode = Mode.REAL;

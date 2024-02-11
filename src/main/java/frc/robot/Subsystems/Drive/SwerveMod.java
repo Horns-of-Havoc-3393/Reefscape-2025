@@ -12,12 +12,21 @@ public class SwerveMod {
     ModIO io;
     ModIOInAutoLogged inputs;
 
+    int id;
+
     public SwerveMod(TalonFX drive, TalonFX steer) {
+        id = drive.getDeviceID();
+
         ModIO io = new ModIO(drive, steer);
         ModIOInAutoLogged inputs = new ModIOInAutoLogged();
 
         io.updateInputs(inputs);
         Logger.processInputs("Drive/Module" + drive.getDeviceID(), inputs);
+    }
+
+    public void periodic() {
+        io.updateInputs(inputs);
+        Logger.processInputs("Drive/Module" + id, inputs);
     }
 
     public void setSwerveState(SwerveModuleState state){

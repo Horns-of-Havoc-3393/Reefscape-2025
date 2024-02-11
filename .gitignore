@@ -41,6 +41,7 @@
 
 # Log file
 *.log
+logs/
 
 # BlueJ files
 *.ctxt
@@ -173,3 +174,7 @@ simgui*.json
 
 # Version file
 src/main/java/frc/robot/BuildConstants.java
+
+#simdata
+./ctre_sim
+

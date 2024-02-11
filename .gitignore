@@ -176,5 +176,5 @@ simgui*.json
 src/main/java/frc/robot/BuildConstants.java
 
 #simdata
-./ctre_sim
+ctre_sim/
 

@@ -35,6 +35,16 @@ public final class Constants {
       new Translation2d(-0.5, -0.5),
       new Translation2d(-0.5, 0.5)
     };
+
+    public static double driveS;
+    public static double driveV;
+    public static double driveP;
+    public static double driveI;
+    public static double driveD;
+
+    public static double steerP;
+    public static double steerI;
+    public static double steerD;
   }
 
   public static final Mode currentMode = Mode.REAL;

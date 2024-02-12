@@ -28,6 +28,7 @@ public final class Constants {
   public static final class driveConstants {
     public static final double driveRotPerMeter = 1.0;
     public static final double maxSpeedMPS = 10;
+    public static final double steeringRatio = 1.0; // Rotations of motor per rotations of wheel
 
     public static final Translation2d[] offsets = {
       new Translation2d(0.5, 0.5),

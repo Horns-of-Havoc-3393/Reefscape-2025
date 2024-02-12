@@ -13,7 +13,8 @@ public interface ModIO {
     double steerCurrentAmps;
     double driveVolts;
     double steerVolts;
-    Rotation2d steerPos;
+    Rotation2d steerPosRelative;
+    Rotation2d steerPosAbsolute;
   }
 
   public default void updateInputs(ModIOIn inputs) {}

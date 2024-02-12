@@ -1,5 +1,6 @@
 package frc.robot.Subsystems.Drive;
 
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.driveConstants;
@@ -23,14 +24,16 @@ public class SwerveMod {
   LoggedDashboardNumber steerI;
   LoggedDashboardNumber steerD;
 
-  public SwerveMod(TalonFX drive, TalonFX steer) {
+  public SwerveMod(TalonFX drive, TalonFX steer, CANcoder absEncoder) {
     id = drive.getDeviceID();
 
-    io = new ModIOTalon(drive, steer);
+    io = new ModIOTalon(drive, steer, absEncoder);
     inputs = new ModIOInAutoLogged();
 
     io.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + drive.getDeviceID(), inputs);
+
+    io.setEncoderOffset((inputs.steerPosRelative.minus(inputs.steerPosAbsolute)));
 
     driveS = new LoggedDashboardNumber("PIDs/driveS", driveConstants.driveS);
     driveV = new LoggedDashboardNumber("PIDs/driveV", driveConstants.driveV);
@@ -53,14 +56,14 @@ public class SwerveMod {
   public void setSwerveState(SwerveModuleState state) {
     Logger.recordOutput("Drive/Module" + id + "/targetSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/targetAngle", state.angle);
-    SwerveModuleState.optimize(state, inputs.steerPos);
+    SwerveModuleState.optimize(state, inputs.steerPosRelative);
 
     io.setDriveSpeed(state.speedMetersPerSecond);
     io.setSteerPos(state.angle.getDegrees());
   }
 
   public SwerveModuleState getState() {
-    return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPos);
+    return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPosRelative);
   }
 
   public void stop() {

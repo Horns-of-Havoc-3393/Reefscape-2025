@@ -2,10 +2,12 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.driveConstants;
@@ -15,21 +17,27 @@ public class ModIOTalon implements ModIO {
   TalonFX drive;
   TalonFX steer;
 
+  CANcoder absEncoder;
+
   StatusSignal<Double> driveVelocity;
   StatusSignal<Double> steerVelocity;
   StatusSignal<Double> driveCurrent;
   StatusSignal<Double> steerCurrent;
   StatusSignal<Double> driveVolts;
   StatusSignal<Double> steerVolts;
-  StatusSignal<Double> steerPos;
+  StatusSignal<Double> steerPosRelative;
+  StatusSignal<Double> steerPosAbsolute;
 
   VelocityVoltage driveRequest;
   PositionVoltage steerRequest;
 
-  public ModIOTalon(TalonFX drive, TalonFX steer) {
+  Rotation2d encoderOffset = new Rotation2d(0);
+
+  public ModIOTalon(TalonFX drive, TalonFX steer, CANcoder absEncoder) {
 
     this.drive = drive;
     this.steer = steer;
+    this.absEncoder = absEncoder;
 
     driveVelocity = drive.getVelocity();
     steerVelocity = steer.getVelocity();
@@ -37,7 +45,13 @@ public class ModIOTalon implements ModIO {
     steerCurrent = steer.getStatorCurrent();
     driveVolts = drive.getMotorVoltage();
     steerVolts = steer.getMotorVoltage();
-    steerPos = steer.getPosition();
+
+    FeedbackConfigs configs = new FeedbackConfigs();
+    configs.SensorToMechanismRatio = driveConstants.steeringRatio;
+    steer.getConfigurator().apply(configs);
+    steerPosRelative = steer.getPosition();
+
+    steerPosAbsolute = absEncoder.getAbsolutePosition();
   }
 
   Slot0Configs dSlot0;
@@ -45,7 +59,14 @@ public class ModIOTalon implements ModIO {
 
   public void updateInputs(ModIOIn inputs) {
     BaseStatusSignal.refreshAll(
-        driveVelocity, steerVelocity, driveCurrent, steerCurrent, driveVolts, steerVolts, steerPos);
+        driveVelocity,
+        steerVelocity,
+        driveCurrent,
+        steerCurrent,
+        driveVolts,
+        steerVolts,
+        steerPosRelative,
+        steerPosAbsolute);
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
     inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / driveConstants.driveRotPerMeter;
@@ -53,9 +74,12 @@ public class ModIOTalon implements ModIO {
     inputs.driveVolts = driveVolts.getValueAsDouble();
 
     inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();
-    inputs.steerPos = Rotation2d.fromRotations(steerPos.getValueAsDouble());
+    inputs.steerPosRelative =
+        Rotation2d.fromRotations(steerPosRelative.getValueAsDouble()).minus(encoderOffset);
     inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
     inputs.steerVolts = steerVolts.getValueAsDouble();
+
+    inputs.steerPosAbsolute = Rotation2d.fromRotations(steerPosAbsolute.getValueAsDouble());
 
     dSlot0 = new Slot0Configs();
     sSlot0 = new Slot0Configs();
@@ -78,6 +102,10 @@ public class ModIOTalon implements ModIO {
 
   public void setSteerVoltage(double volts) {
     steer.setControl(new VoltageOut(volts));
+  }
+
+  public void setEncoderOffset(Rotation2d offset) {
+    this.encoderOffset = offset;
   }
 
   public void setDriveVelPID(double s, double v, double p, double i, double d) {

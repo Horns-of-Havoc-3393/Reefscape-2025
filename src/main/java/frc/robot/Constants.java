@@ -36,18 +36,18 @@ public final class Constants {
       new Translation2d(-0.5, 0.5)
     };
 
-    public static double driveS;
-    public static double driveV;
-    public static double driveP;
-    public static double driveI;
-    public static double driveD;
+    public static double driveS = 0.1;
+    public static double driveV = 0.0;
+    public static double driveP = 1.0;
+    public static double driveI = 0.0;
+    public static double driveD = 0.0;
 
-    public static double steerP;
-    public static double steerI;
-    public static double steerD;
+    public static double steerP = 1.0;
+    public static double steerI = 0.0;
+    public static double steerD = 0.0;
   }
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
 
   public static enum Mode {
     /** Running on a real robot. */

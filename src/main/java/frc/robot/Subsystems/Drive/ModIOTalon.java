@@ -44,7 +44,8 @@ public class ModIOTalon implements ModIO {
   Slot0Configs sSlot0;
 
   public void updateInputs(ModIOIn inputs) {
-    BaseStatusSignal.refreshAll();
+    BaseStatusSignal.refreshAll(
+        driveVelocity, steerVelocity, driveCurrent, steerCurrent, driveVolts, steerVolts, steerPos);
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
     inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / driveConstants.driveRotPerMeter;
@@ -55,6 +56,12 @@ public class ModIOTalon implements ModIO {
     inputs.steerPos = Rotation2d.fromRotations(steerPos.getValueAsDouble());
     inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
     inputs.steerVolts = steerVolts.getValueAsDouble();
+
+    dSlot0 = new Slot0Configs();
+    sSlot0 = new Slot0Configs();
+
+    driveRequest = new VelocityVoltage(0.0);
+    steerRequest = new PositionVoltage(0.0);
   }
 
   public void setDriveSpeed(double speedMPS) {

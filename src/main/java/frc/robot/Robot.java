@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -34,6 +35,7 @@ public class Robot extends LoggedRobot {
   private final LoggedDashboardChooser<String> chooser =
       new LoggedDashboardChooser<>("Auto Choices");
 
+  private RobotContainer robotContainer;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -87,13 +89,15 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     // Initialize auto chooser
-    chooser.addDefaultOption("Default Auto", defaultAuto);
-    chooser.addOption("My Auto", customAuto);
+
+    robotContainer = new RobotContainer();
   }
 
   /** This function is called periodically during all modes. */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   /** This function is called once when autonomous is enabled. */
   @Override
@@ -118,9 +122,7 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    RobotContainer container = new RobotContainer();
-  }
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override

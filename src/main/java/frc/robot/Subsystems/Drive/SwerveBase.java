@@ -40,11 +40,13 @@ public class SwerveBase extends SubsystemBase {
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zGyro));
     SwerveDriveKinematics.desaturateWheelSpeeds(states, driveConstants.maxSpeedMPS);
+    Logger.recordOutput("Drive/targetStates", states);
     for (int i = 0; i < 4; i++) {
       modules[i].setSwerveState(states[i]);
     }
   }
 
+  @Override
   public void periodic() {
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);

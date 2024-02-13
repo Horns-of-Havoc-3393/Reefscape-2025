@@ -2,6 +2,8 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -25,12 +27,13 @@ public class SwerveBase extends SubsystemBase {
       TalonFX[] steerMotors,
       CANcoder[] encoders,
       Translation2d[] positions,
+      Rotation2d[] absEncoderOffsets,
       PosIONavX posIO) {
     SwerveDriveKinematics kinematics = new SwerveDriveKinematics(positions);
     this.kinematics = kinematics;
 
     for (int i = 0; i < 4; i++) {
-      modules[i] = new SwerveMod(driveMotors[i], steerMotors[i], encoders[i]);
+      modules[i] = new SwerveMod(driveMotors[i], steerMotors[i], encoders[i], absEncoderOffsets[i]);
     }
 
     this.posIO = posIO;

@@ -2,6 +2,8 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import frc.robot.Constants.driveConstants;
 import org.littletonrobotics.junction.Logger;
@@ -24,10 +26,10 @@ public class SwerveMod {
   LoggedDashboardNumber steerI;
   LoggedDashboardNumber steerD;
 
-  public SwerveMod(TalonFX drive, TalonFX steer, CANcoder absEncoder) {
+  public SwerveMod(TalonFX drive, TalonFX steer, CANcoder absEncoder, Rotation2d absEncoderOffset) {
     id = drive.getDeviceID();
 
-    io = new ModIOTalon(drive, steer, absEncoder);
+    io = new ModIOTalon(drive, steer, absEncoder, absEncoderOffset);
     inputs = new ModIOInAutoLogged();
 
     io.updateInputs(inputs);

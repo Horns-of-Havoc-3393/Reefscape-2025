@@ -23,7 +23,12 @@ public class RobotContainer {
 
     swerve =
         new SwerveBase(
-            driveMotors, steerMotors, encoders, driveConstants.offsets, new PosIONavX(new AHRS()));
+            driveMotors,
+            steerMotors,
+            encoders,
+            driveConstants.offsets,
+            driveConstants.absoluteEncoderOffsets,
+            new PosIONavX(new AHRS()));
     configureBinds();
   }
 

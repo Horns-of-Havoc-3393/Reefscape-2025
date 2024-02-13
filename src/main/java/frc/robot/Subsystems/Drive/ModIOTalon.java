@@ -31,9 +31,12 @@ public class ModIOTalon implements ModIO {
   VelocityVoltage driveRequest;
   PositionVoltage steerRequest;
 
+  Rotation2d absoluteEncoderOffset = new Rotation2d(0);
   Rotation2d encoderOffset = new Rotation2d(0);
 
-  public ModIOTalon(TalonFX drive, TalonFX steer, CANcoder absEncoder) {
+  public ModIOTalon(TalonFX drive, TalonFX steer, CANcoder absEncoder, Rotation2d absEncoderOffset) {
+
+    this.absoluteEncoderOffset = absEncoderOffset;
 
     this.drive = drive;
     this.steer = steer;
@@ -79,7 +82,7 @@ public class ModIOTalon implements ModIO {
     inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
     inputs.steerVolts = steerVolts.getValueAsDouble();
 
-    inputs.steerPosAbsolute = Rotation2d.fromRotations(steerPosAbsolute.getValueAsDouble());
+    inputs.steerPosAbsolute = Rotation2d.fromRotations(steerPosAbsolute.getValueAsDouble()).minus(absoluteEncoderOffset);
 
     dSlot0 = new Slot0Configs();
     sSlot0 = new Slot0Configs();

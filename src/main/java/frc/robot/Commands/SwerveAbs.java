@@ -26,7 +26,8 @@ public class SwerveAbs extends Command {
     Logger.recordOutput("Drive/AbsCmd/betaAxis", controller.getRightX());
     // if ((Math.pow(xAxis.getAsDouble(), 2) + Math.pow(yAxis.getAsDouble(), 2)) > 0.1) {
     swerve.setFO(
-        new ChassisSpeeds(controller.getLeftY(), controller.getLeftX(), controller.getRightX()));
+        new ChassisSpeeds(
+            controller.getLeftY() * -1, controller.getLeftX() * -1, controller.getRightX()*-1));
     // }
   }
 }

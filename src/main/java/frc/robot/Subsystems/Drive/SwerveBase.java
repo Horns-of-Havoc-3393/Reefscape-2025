@@ -88,5 +88,7 @@ public class SwerveBase extends SubsystemBase {
     
     Logger.recordOutput("Kalman/xVelocity", measuredSpeeds.vxMetersPerSecond);
     Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);
+
+    Logger.recordOutput("ChassisAngle", inputs.zGyro);
   }
 }

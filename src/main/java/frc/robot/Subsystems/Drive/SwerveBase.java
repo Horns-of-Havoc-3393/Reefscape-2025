@@ -7,6 +7,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
@@ -20,6 +23,9 @@ public class SwerveBase extends SubsystemBase {
   SwerveMod[] modules = new SwerveMod[4];
 
   SwerveDriveKinematics kinematics;
+
+  DoublePublisher xVelPub;
+  DoublePublisher yVelPub;
 
   public SwerveBase(
       TalonFX[] driveMotors,
@@ -37,6 +43,12 @@ public class SwerveBase extends SubsystemBase {
 
     this.posIO = posIO;
     inputs = new PosIOInAutoLogged();
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable table = inst.getTable("Kalman");
+    xVelPub = table.getDoubleTopic("xVelocity").publish();
+    yVelPub = table.getDoubleTopic("yVelocity").publish();
+
 
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
@@ -69,5 +81,12 @@ public class SwerveBase extends SubsystemBase {
     for (var module : modules) {
       module.periodic();
     }
+
+    ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(getStates());
+    xVelPub.set(measuredSpeeds.vxMetersPerSecond);
+    yVelPub.set(measuredSpeeds.vyMetersPerSecond);
+    
+    Logger.recordOutput("Kalman/xVelocity", measuredSpeeds.vxMetersPerSecond);
+    Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);
   }
 }

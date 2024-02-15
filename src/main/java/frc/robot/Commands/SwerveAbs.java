@@ -27,7 +27,7 @@ public class SwerveAbs extends Command {
     // if ((Math.pow(xAxis.getAsDouble(), 2) + Math.pow(yAxis.getAsDouble(), 2)) > 0.1) {
     swerve.setFO(
         new ChassisSpeeds(
-            controller.getLeftY() * -1, controller.getLeftX() * -1, controller.getRightX()*-1));
+            controller.getLeftY() * -1, controller.getLeftX() * -1, controller.getRightX() * -1));
     // }
   }
 }

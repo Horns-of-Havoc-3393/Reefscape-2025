@@ -53,6 +53,14 @@ public class SwerveBase extends SubsystemBase {
     }
   }
 
+  public SwerveModuleState[] getStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i++) {
+      states[i] = modules[i].getState();
+    }
+    return states;
+  }
+
   @Override
   public void periodic() {
     posIO.updateInputs(inputs);

@@ -49,7 +49,6 @@ public class SwerveBase extends SubsystemBase {
     xVelPub = table.getDoubleTopic("xVelocity").publish();
     yVelPub = table.getDoubleTopic("yVelocity").publish();
 
-
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
   }
@@ -82,10 +81,12 @@ public class SwerveBase extends SubsystemBase {
       module.periodic();
     }
 
-    ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(getStates());
+    SwerveModuleState[] states = getStates();
+    Logger.recordOutput("Drive/swerveState", states);
+    ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(states);
     xVelPub.set(measuredSpeeds.vxMetersPerSecond);
     yVelPub.set(measuredSpeeds.vyMetersPerSecond);
-    
+
     Logger.recordOutput("Kalman/xVelocity", measuredSpeeds.vxMetersPerSecond);
     Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);
 

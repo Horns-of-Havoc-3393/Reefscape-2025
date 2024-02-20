@@ -29,31 +29,34 @@ public final class Constants {
   public static final class driveConstants {
     public static final double driveRotPerMeter = 1.0;
     public static final double maxSpeedMPS = 10;
-    public static final double steeringRatio = 1.0; // Rotations of motor per rotations of wheel
+    public static final double steeringRatio =
+        21.42857142857143; // Rotations of motor per rotations of wheel
+    public static final double wheelRadius = 1.932; // inches
+    public static final double driveRatio = 5.903;
 
     public static final Rotation2d[] absoluteEncoderOffsets = {
-      Rotation2d.fromDegrees(0.0),
-      Rotation2d.fromDegrees(0.0),
-      Rotation2d.fromDegrees(0.0),
-      Rotation2d.fromDegrees(0.0)
+      Rotation2d.fromRadians(0.332),
+      Rotation2d.fromRadians(-0.664),
+      Rotation2d.fromRadians(1.921),
+      Rotation2d.fromRadians(-0.823)
     };
 
     public static final Translation2d[] offsets = {
-      new Translation2d(0.5, 0.5),
-      new Translation2d(0.5, -0.5),
-      new Translation2d(-0.5, -0.5),
-      new Translation2d(-0.5, 0.5)
+      new Translation2d(0.238125, -0.238125),
+      new Translation2d(-0.238125, -0.238125),
+      new Translation2d(-0.238125, 0.238125),
+      new Translation2d(0.238125, 0.238125)
     };
 
-    public static double driveS = 0.1;
+    public static double driveS = 0;
     public static double driveV = 0.0;
-    public static double driveP = 1.0;
+    public static double driveP = 0.0;
     public static double driveI = 0.0;
     public static double driveD = 0.0;
 
-    public static double steerP = 1.0;
-    public static double steerI = 0.0;
-    public static double steerD = 0.0;
+    public static double steerP = 29;
+    public static double steerI = 0.001;
+    public static double steerD = 0.2;
   }
 
   public static final Mode currentMode = Mode.SIM;

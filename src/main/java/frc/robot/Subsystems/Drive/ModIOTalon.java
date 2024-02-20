@@ -4,8 +4,8 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.PositionDutyCycle;
+import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -28,8 +28,8 @@ public class ModIOTalon implements ModIO {
   StatusSignal<Double> steerPosRelative;
   StatusSignal<Double> steerPosAbsolute;
 
-  VelocityVoltage driveRequest;
-  PositionVoltage steerRequest;
+  VelocityDutyCycle driveRequest;
+  PositionDutyCycle steerRequest;
 
   Rotation2d absoluteEncoderOffset = new Rotation2d(0);
   Rotation2d encoderOffset = new Rotation2d(0);
@@ -42,6 +42,8 @@ public class ModIOTalon implements ModIO {
     this.drive = drive;
     this.steer = steer;
     this.absEncoder = absEncoder;
+
+    this.steer.setInverted(true);
 
     driveVelocity = drive.getVelocity();
     steerVelocity = steer.getVelocity();
@@ -73,7 +75,10 @@ public class ModIOTalon implements ModIO {
         steerPosAbsolute);
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
-    inputs.driveVelocityMPS = driveVelocity.getValueAsDouble() / driveConstants.driveRotPerMeter;
+    inputs.driveVelocityMPS =
+        driveVelocity.getValueAsDouble()
+            / driveConstants.driveRatio
+            * (driveConstants.wheelRadius * 0.0254 * 2 * Math.PI);
     inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
     inputs.driveVolts = driveVolts.getValueAsDouble();
 
@@ -86,15 +91,19 @@ public class ModIOTalon implements ModIO {
     inputs.steerPosAbsolute =
         Rotation2d.fromRotations(steerPosAbsolute.getValueAsDouble()).minus(absoluteEncoderOffset);
 
+    inputs.steerPosRaw = steerPosRelative.getValueAsDouble();
+
     dSlot0 = new Slot0Configs();
     sSlot0 = new Slot0Configs();
 
-    driveRequest = new VelocityVoltage(0.0);
-    steerRequest = new PositionVoltage(0.0);
+    driveRequest = new VelocityDutyCycle(0.0);
+    steerRequest = new PositionDutyCycle(0.0);
   }
 
   public void setDriveSpeed(double speedMPS) {
-    drive.setControl(driveRequest.withVelocity(speedMPS));
+    double outputSpeed =
+        speedMPS / (driveConstants.wheelRadius * 0.0254 * 2 * Math.PI) * driveConstants.driveRatio;
+    drive.setControl(driveRequest.withVelocity(outputSpeed));
   }
 
   public void setDriveVoltage(double volts) {
@@ -102,7 +111,7 @@ public class ModIOTalon implements ModIO {
   }
 
   public void setSteerPos(double posDegrees) {
-    steer.setControl(steerRequest.withPosition(posDegrees));
+    steer.setControl(steerRequest.withSlot(0).withPosition(posDegrees));
   }
 
   public void setSteerVoltage(double volts) {

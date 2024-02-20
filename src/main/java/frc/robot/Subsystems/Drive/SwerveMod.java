@@ -60,7 +60,10 @@ public class SwerveMod {
     SwerveModuleState.optimize(state, inputs.steerPosRelative);
 
     io.setDriveSpeed(state.speedMetersPerSecond);
-    io.setSteerPos(state.angle.getDegrees());
+
+    double setpoint =
+        inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
+    io.setSteerPos(setpoint);
   }
 
   public SwerveModuleState getState() {

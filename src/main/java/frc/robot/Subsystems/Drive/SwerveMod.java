@@ -59,11 +59,15 @@ public class SwerveMod {
     Logger.recordOutput("Drive/Module" + id + "/targetAngle", state.angle);
     SwerveModuleState.optimize(state, inputs.steerPosRelative);
 
-    io.setDriveSpeed(state.speedMetersPerSecond);
+    if (state.speedMetersPerSecond < 0.1) {
+      stop();
+    } else {
+      io.setDriveSpeed(state.speedMetersPerSecond);
 
-    double setpoint =
-        inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
-    io.setSteerPos(setpoint);
+      double setpoint =
+          inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
+      io.setSteerPos(setpoint);
+    }
   }
 
   public SwerveModuleState getState() {
@@ -71,7 +75,7 @@ public class SwerveMod {
   }
 
   public void stop() {
-    io.setDriveVoltage(0.0);
-    io.setSteerVoltage(0.0);
+    io.setDriveDutyCycle(0.0);
+    io.setSteerDutyCycle(0.0);
   }
 }

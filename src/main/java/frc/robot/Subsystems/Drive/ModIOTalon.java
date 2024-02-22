@@ -4,9 +4,9 @@ import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -116,16 +116,16 @@ public class ModIOTalon implements ModIO {
     drive.setControl(driveRequest.withVelocity(outputSpeed));
   }
 
-  public void setDriveVoltage(double volts) {
-    drive.setControl(new VoltageOut(volts));
+  public void setDriveDutyCycle(double volts) {
+    drive.setControl(new DutyCycleOut(volts));
   }
 
   public void setSteerPos(double posDegrees) {
     steer.setControl(steerRequest.withSlot(0).withPosition(posDegrees));
   }
 
-  public void setSteerVoltage(double volts) {
-    steer.setControl(new VoltageOut(volts));
+  public void setSteerDutyCycle(double volts) {
+    steer.setControl(new DutyCycleOut(volts));
   }
 
   public void setEncoderOffset(Rotation2d offset) {
@@ -147,6 +147,7 @@ public class ModIOTalon implements ModIO {
     sSlot0.kP = p;
     sSlot0.kI = i;
     sSlot0.kD = d;
+
     steer.getConfigurator().apply(sSlot0);
   }
 }

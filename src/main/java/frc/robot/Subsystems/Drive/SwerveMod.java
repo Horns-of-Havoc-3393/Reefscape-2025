@@ -48,24 +48,29 @@ public class SwerveMod {
   }
 
   public void periodic() {
+    double initial = Logger.getRealTimestamp();
     io.setDriveVelPID(driveS.get(), driveV.get(), driveP.get(), driveI.get(), driveD.get());
     io.setSteerPID(steerP.get(), steerI.get(), steerD.get());
     io.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + id, inputs);
+    Logger.recordOutput("Timers/SwerveModPd", (Logger.getRealTimestamp() - initial) * 0.000001);
   }
 
   public void setSwerveState(SwerveModuleState state) {
     Logger.recordOutput("Drive/Module" + id + "/targetSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/targetAngle", state.angle);
-    state = SwerveModuleState.optimize(state, inputs.steerPosRelative);
+    SwerveModuleState optimizedState = SwerveModuleState.optimize(state, inputs.steerPosRelative);
+    Logger.recordOutput(
+        "Drive/Module" + id + "/optimizedSpeed", optimizedState.speedMetersPerSecond);
+    Logger.recordOutput("Drive/Module" + id + "/optimizedAngle", optimizedState.angle);
 
-    if (state.speedMetersPerSecond < 0.1) {
+    if (Math.abs(optimizedState.speedMetersPerSecond) < 0.1) {
       stop();
     } else {
-      io.setDriveSpeed(state.speedMetersPerSecond);
+      io.setDriveSpeed(optimizedState.speedMetersPerSecond);
 
       double setpoint =
-          inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
+          inputs.steerPosRaw + optimizedState.angle.minus(inputs.steerPosRelative).getRotations();
       io.setSteerPos(setpoint);
     }
   }

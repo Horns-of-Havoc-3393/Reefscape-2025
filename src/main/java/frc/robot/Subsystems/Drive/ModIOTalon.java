@@ -3,12 +3,15 @@ package frc.robot.Subsystems.Drive;
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionDutyCycle;
 import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.driveConstants;
 
@@ -44,6 +47,11 @@ public class ModIOTalon implements ModIO {
     this.drive = drive;
     this.steer = steer;
     this.absEncoder = absEncoder;
+
+    MotorOutputConfigs outCfg = new MotorOutputConfigs();
+    outCfg.NeutralMode = NeutralModeValue.Brake;
+    drive.getConfigurator().apply(outCfg);
+    steer.getConfigurator().apply(outCfg);
 
     this.steer.setInverted(true);
 

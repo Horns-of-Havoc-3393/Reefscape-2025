@@ -27,6 +27,8 @@ public class ModIOTalon implements ModIO {
   StatusSignal<Double> steerVolts;
   StatusSignal<Double> steerPosRelative;
   StatusSignal<Double> steerPosAbsolute;
+  StatusSignal<Double> driveVelErr;
+  StatusSignal<Double> steerPosErr;
 
   VelocityDutyCycle driveRequest;
   PositionDutyCycle steerRequest;
@@ -58,6 +60,9 @@ public class ModIOTalon implements ModIO {
     steerPosRelative = steer.getPosition();
 
     steerPosAbsolute = absEncoder.getAbsolutePosition();
+
+    driveVelErr = drive.getClosedLoopError();
+    steerPosErr = steer.getClosedLoopError();
   }
 
   Slot0Configs dSlot0;
@@ -72,7 +77,9 @@ public class ModIOTalon implements ModIO {
         driveVolts,
         steerVolts,
         steerPosRelative,
-        steerPosAbsolute);
+        steerPosAbsolute,
+        driveVelErr,
+        steerPosErr);
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
     inputs.driveVelocityMPS =
@@ -92,6 +99,9 @@ public class ModIOTalon implements ModIO {
         Rotation2d.fromRotations(steerPosAbsolute.getValueAsDouble()).minus(absoluteEncoderOffset);
 
     inputs.steerPosRaw = steerPosRelative.getValueAsDouble();
+
+    inputs.driveVelErr = driveVelErr.getValueAsDouble();
+    inputs.steerPosErr = steerPosErr.getValueAsDouble();
 
     dSlot0 = new Slot0Configs();
     sSlot0 = new Slot0Configs();

@@ -3,6 +3,8 @@ package frc.robot;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Constants.driveConstants;
@@ -30,6 +32,18 @@ public class RobotContainer {
             driveConstants.absoluteEncoderOffsets,
             new PosIONavX(new AHRS()));
     configureBinds();
+
+    NetworkTableInstance inst = NetworkTableInstance.getDefault();
+    NetworkTable pids = inst.getTable("SmartDashboard/PIDs");
+    pids.getDoubleTopic("driveS").publish().set(driveConstants.driveS);
+    pids.getDoubleTopic("driveV").publish().set(driveConstants.driveV);
+    pids.getDoubleTopic("driveP").publish().set(driveConstants.driveP);
+    pids.getDoubleTopic("driveI").publish().set(driveConstants.driveI);
+    pids.getDoubleTopic("driveD").publish().set(driveConstants.driveD);
+
+    pids.getDoubleTopic("steerP").publish().set(driveConstants.steerP);
+    pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI);
+    pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD);
   }
 
   private void configureBinds() {

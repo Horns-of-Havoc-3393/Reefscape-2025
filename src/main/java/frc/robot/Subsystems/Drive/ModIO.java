@@ -16,6 +16,8 @@ public interface ModIO {
     Rotation2d steerPosRelative;
     Rotation2d steerPosAbsolute;
     double steerPosRaw;
+    double driveVelErr;
+    double steerPosErr;
   }
 
   public default void updateInputs(ModIOIn inputs) {}

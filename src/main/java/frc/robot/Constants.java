@@ -49,8 +49,8 @@ public final class Constants {
     };
 
     public static double driveS = 0;
-    public static double driveV = 0.0;
-    public static double driveP = 0.0;
+    public static double driveV = 0.01;
+    public static double driveP = 0.03;
     public static double driveI = 0.0;
     public static double driveD = 0.0;
 

@@ -38,6 +38,7 @@ public class SwerveBase extends SubsystemBase {
   LoggedDashboardNumber rotAccLimit;
 
   LoggedDashboardBoolean update;
+  LoggedDashboardBoolean zeroGyro;
 
   public SwerveBase(
       TalonFX[] driveMotors,
@@ -64,6 +65,7 @@ public class SwerveBase extends SubsystemBase {
     latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
     rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
     update = new LoggedDashboardBoolean("update", false);
+    zeroGyro = new LoggedDashboardBoolean("Control/zeroGyro", false);
 
     xLimit = new SlewRateLimiter(latAccLimit.get());
     yLimit = new SlewRateLimiter(latAccLimit.get());
@@ -104,6 +106,10 @@ public class SwerveBase extends SubsystemBase {
       xLimit = new SlewRateLimiter(latAccLimit.get());
       yLimit = new SlewRateLimiter(latAccLimit.get());
       rLimit = new SlewRateLimiter(rotAccLimit.get());
+    }
+
+    if (zeroGyro.get()) {
+      posIO.zero();
     }
 
     for (var module : modules) {

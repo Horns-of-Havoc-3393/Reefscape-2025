@@ -2,7 +2,6 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -17,7 +16,6 @@ import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class SwerveBase extends SubsystemBase {
   PosIONavX posIO;
@@ -29,13 +27,6 @@ public class SwerveBase extends SubsystemBase {
 
   DoublePublisher xVelPub;
   DoublePublisher yVelPub;
-
-  SlewRateLimiter xLimit;
-  SlewRateLimiter yLimit;
-  SlewRateLimiter rLimit;
-
-  LoggedDashboardNumber latAccLimit;
-  LoggedDashboardNumber rotAccLimit;
 
   LoggedDashboardBoolean update;
   LoggedDashboardBoolean zeroGyro;
@@ -62,14 +53,8 @@ public class SwerveBase extends SubsystemBase {
     xVelPub = table.getDoubleTopic("xVelocity").publish();
     yVelPub = table.getDoubleTopic("yVelocity").publish();
 
-    latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
-    rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
     update = new LoggedDashboardBoolean("update", false);
     zeroGyro = new LoggedDashboardBoolean("Control/zeroGyro", false);
-
-    xLimit = new SlewRateLimiter(latAccLimit.get());
-    yLimit = new SlewRateLimiter(latAccLimit.get());
-    rLimit = new SlewRateLimiter(rotAccLimit.get());
 
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
@@ -101,12 +86,6 @@ public class SwerveBase extends SubsystemBase {
     double initial = Logger.getRealTimestamp();
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
-
-    if (update.get()) {
-      xLimit = new SlewRateLimiter(latAccLimit.get());
-      yLimit = new SlewRateLimiter(latAccLimit.get());
-      rLimit = new SlewRateLimiter(rotAccLimit.get());
-    }
 
     if (zeroGyro.get()) {
       posIO.zero();

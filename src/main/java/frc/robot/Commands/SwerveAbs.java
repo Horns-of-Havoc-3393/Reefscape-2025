@@ -1,10 +1,12 @@
 package frc.robot.Commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Subsystems.Drive.SwerveBase;
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 public class SwerveAbs extends Command {
@@ -17,6 +19,14 @@ public class SwerveAbs extends Command {
   LoggedDashboardNumber lateralMaxSpeed;
   LoggedDashboardNumber rotationalMaxSpeed;
 
+  SlewRateLimiter xLimit;
+  SlewRateLimiter yLimit;
+  SlewRateLimiter rLimit;
+
+  LoggedDashboardNumber latAccLimit;
+  LoggedDashboardNumber rotAccLimit;
+  LoggedDashboardBoolean update;
+
   public SwerveAbs(SwerveBase swerve, CommandXboxController controller) {
     this.controller = controller;
     this.swerve = swerve;
@@ -27,6 +37,13 @@ public class SwerveAbs extends Command {
     deadzone = new LoggedDashboardNumber("Control/deadzone");
     lateralMaxSpeed = new LoggedDashboardNumber("Control/lateralMaxSpeed");
     rotationalMaxSpeed = new LoggedDashboardNumber("Control/rotationalMaxSpeed");
+    latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
+    rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
+    update = new LoggedDashboardBoolean("update");
+
+    xLimit = new SlewRateLimiter(latAccLimit.get());
+    yLimit = new SlewRateLimiter(latAccLimit.get());
+    rLimit = new SlewRateLimiter(rotAccLimit.get());
   }
 
   public void execute() {
@@ -34,15 +51,20 @@ public class SwerveAbs extends Command {
     Logger.recordOutput("Drive/AbsCMD/xAxis", controller.getLeftY());
     Logger.recordOutput("Drive/AbsCMD/yAxis", controller.getLeftX());
     Logger.recordOutput("Drive/AbsCMD/betaAxis", controller.getRightX());
+    if (update.get()) {
+      xLimit = new SlewRateLimiter(latAccLimit.get());
+      yLimit = new SlewRateLimiter(latAccLimit.get());
+      rLimit = new SlewRateLimiter(rotAccLimit.get());
+    }
     if ((Math.pow(controller.getLeftY(), 2)
             + Math.pow(controller.getLeftX(), 2)
             + Math.pow(controller.getRightX(), 2))
         > deadzone.get()) {
       swerve.setFO(
           new ChassisSpeeds(
-              controller.getLeftY() * lateralMaxSpeed.get(),
-              controller.getLeftX() * lateralMaxSpeed.get(),
-              controller.getRightX() * rotationalMaxSpeed.get()),
+              xLimit.calculate(controller.getLeftY() * lateralMaxSpeed.get()),
+              yLimit.calculate(controller.getLeftX() * lateralMaxSpeed.get()),
+              rLimit.calculate(controller.getRightX() * rotationalMaxSpeed.get())),
           lateralMaxSpeed.get());
     } else {
       swerve.setFO(new ChassisSpeeds(0, 0, 0), lateralMaxSpeed.get());

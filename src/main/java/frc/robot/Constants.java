@@ -28,9 +28,9 @@ public final class Constants {
 
   public static final class driveConstants {
     public static final double maxSpeedMPS = 5;
-    public static final double maxRotRPS = 7;
-    public static final double lateralAccelLimitMPSPS = 1;
-    public static final double rotationalAccelLimitRPSPS = 2;
+    public static final double maxRotRPS = 5;
+    public static final double lateralAccelLimitMPSPS = 3;
+    public static final double rotationalAccelLimitRPSPS = 13;
 
     public static final double steeringRatio =
         21.42857142857143; // Rotations of motor per rotations of wheel

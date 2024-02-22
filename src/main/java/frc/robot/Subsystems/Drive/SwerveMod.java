@@ -57,7 +57,7 @@ public class SwerveMod {
   public void setSwerveState(SwerveModuleState state) {
     Logger.recordOutput("Drive/Module" + id + "/targetSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/targetAngle", state.angle);
-    SwerveModuleState.optimize(state, inputs.steerPosRelative);
+    state = SwerveModuleState.optimize(state, inputs.steerPosRelative);
 
     if (state.speedMetersPerSecond < 0.1) {
       stop();

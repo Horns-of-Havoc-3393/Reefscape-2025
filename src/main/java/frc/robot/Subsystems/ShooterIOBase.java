@@ -1,5 +1,7 @@
 package frc.robot.Subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+
 public interface ShooterIOBase {
     public static class ShooterIOIn {
         double shooter1Volts;
@@ -16,9 +18,23 @@ public interface ShooterIOBase {
         double shooter2SetpointRPS;
         double shooter2SetpointMPS;
 
+        double elevator1Volts;
+        double elevator1DutyCycle;
+        double elevator1SpeedRPS;
+        double elevator1SetpointDeg;
+        Rotation2d elevator1Position;
+
+        double elevator2Volts;
+        double elevator2DutyCycle;
+        double elevator2SpeedRPS;
+        double elevator2SetpointDeg;
+        Rotation2d elevator2Position;
+
         double conveyorVolts;
         double conveyorDutyCycle;
         double conveyorSpeedRPS;
+
+        Rotation2d shooterAngleAbs;
 
         Boolean beamBreak;
 

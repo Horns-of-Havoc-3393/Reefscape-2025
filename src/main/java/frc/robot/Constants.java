@@ -67,6 +67,8 @@ public final class Constants {
     public static int intakeBeamID = 1;
 
     public static double shootWheelDiameter = 4.0;
+
+    public static double elevatorConversion = 72/11*50;
   }
 
   public static final Mode currentMode = Mode.SIM;

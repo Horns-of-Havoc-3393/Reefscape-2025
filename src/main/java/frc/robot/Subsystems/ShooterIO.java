@@ -1,5 +1,6 @@
 package frc.robot.Subsystems;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkFlex;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -45,5 +46,20 @@ public class ShooterIO implements ShooterIOBase {
         inputs.conveyorSpeedRPS = conveyor.getEncoder().getPosition();
 
         inputs.beamBreak = beamBreak.get();
+    }
+
+    public void setShooterSpeed(double speed1MPS, double speed2MPS) {
+        shooter1SetpointMPS = speed1MPS;
+        shooter2SetpointMPS = speed2MPS;
+        shooter1SetpointRPS = speed1MPS/(shooterConstants.shootWheelDiameter*Math.PI);
+        shooter2SetpointRPS = speed2MPS/(shooterConstants.shootWheelDiameter*Math.PI);
+        shooter1.getPIDController().setReference(shooter1SetpointRPS,CANSparkBase.ControlType.kVelocity);
+        shooter2.getPIDController().setReference(shooter2SetpointRPS,CANSparkBase.ControlType.kVelocity);
+    }
+
+    public void setInversions(Boolean shooter1, Boolean shooter2, Boolean conveyor) {
+        this.shooter1.setInverted(shooter1);
+        this.shooter2.setInverted(shooter2);
+        this.conveyor.setInverted(conveyor);
     }
 }

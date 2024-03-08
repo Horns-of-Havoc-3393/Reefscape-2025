@@ -62,6 +62,13 @@ public final class Constants {
     public static double steerD = 0.2;
   }
 
+  public static final class shooterConstants {
+    public static int shootBeamID = 0;
+    public static int intakeBeamID = 1;
+
+    public static double shootWheelDiameter = 4.0;
+  }
+
   public static final Mode currentMode = Mode.SIM;
 
   public static enum Mode {

@@ -53,6 +53,8 @@ public class ShooterIOSparks implements ShooterIO {
     this.shooter2 = shooter2;
     this.conveyor = conveyor;
 
+    absEncoder = new DutyCycleEncoder(0);
+
 
     shooter1PID = new PIDController(shooterConstants.shooterP,shooterConstants.shooterI,shooterConstants.shooterD);
     shooter2PID = new PIDController(shooterConstants.shooterP,shooterConstants.shooterI,shooterConstants.shooterD);
@@ -143,8 +145,8 @@ public class ShooterIOSparks implements ShooterIO {
   public void setElevatorAngle(Rotation2d angle) {
     double motor1Pos = angle.minus(elevator1Offset).getRotations() * (shooterConstants.elevatorConversion);
     double motor2Pos = angle.minus(elevator2Offset).getRotations() * (shooterConstants.elevatorConversion);
-    elevator1.set(elevator1PID.calculate(elevator1.getEncoder().getPosition(), motor1Pos));
-    elevator2.set(elevator2PID.calculate(elevator2.getEncoder().getPosition(), motor2Pos));
+    elevator1.set(elevator1PID.calculate(elevator1.getEncoder().getPosition(), motor1Pos) + (Math.cos(elevator1.getEncoder().getPosition())*elevatorG));
+    elevator2.set(elevator2PID.calculate(elevator2.getEncoder().getPosition(), motor2Pos) + (Math.cos(elevator2.getEncoder().getPosition())*elevatorG));
   }
 
   public void setElevatorDutyCycle(double percent) {

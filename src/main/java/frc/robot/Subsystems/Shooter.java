@@ -14,10 +14,10 @@ public class Shooter extends SubsystemBase {
   ShooterIOInAutoLogged inputs;
 
   public static class angleSetpoints {
-    Rotation2d SHOOT = Rotation2d.fromDegrees(60);
-    Rotation2d LOAD = Rotation2d.fromDegrees(50);
-    Rotation2d AMP = Rotation2d.fromDegrees(110);
-    Rotation2d DRIVE = Rotation2d.fromDegrees(0);
+    public static Rotation2d SHOOT = Rotation2d.fromDegrees(60);
+    public static Rotation2d LOAD = Rotation2d.fromDegrees(50);
+    public static Rotation2d AMP = Rotation2d.fromDegrees(110);
+    public static Rotation2d DRIVE = Rotation2d.fromDegrees(0);
   }
 
   private LoggedDashboardNumber shooterP;
@@ -56,6 +56,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void periodic() {
+    io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
     io.setShooterPID(shooterP.get(),shooterI.get(),shooterD.get());
     io.setElevatorPID(elevatorP.get(),elevatorI.get(),elevatorD.get(),elevatorG.get()); 
@@ -70,5 +71,9 @@ public class Shooter extends SubsystemBase {
 
   public void setSpeed(double speedMPS) {
     speedSetpoint = speedMPS;
+  }
+
+  public void setConveyorSpeed(double percent) {
+    io.setConveyorSpeed(percent);
   }
 }

@@ -87,14 +87,14 @@ public class ShooterIOSparks implements ShooterIO {
     inputs.elevator1SpeedRPS = elevator1.getAbsoluteEncoder().getVelocity();
     inputs.elevator1SetpointDeg = elevator1SetpointDeg;
     inputs.elevator1Position =
-        Rotation2d.fromRotations(elevator1.getAbsoluteEncoder().getPosition());
+        Rotation2d.fromRotations(elevator1.getAbsoluteEncoder().getPosition()).times(shooterConstants.elevatorConversion);
 
     inputs.elevator2DutyCycle = elevator1.getAppliedOutput();
     inputs.elevator2Volts = elevator1.getBusVoltage();
     inputs.elevator2SpeedRPS = elevator1.getAbsoluteEncoder().getVelocity();
     inputs.elevator2SetpointDeg = elevator2SetpointDeg;
     inputs.elevator2Position =
-        Rotation2d.fromRotations(elevator2.getAbsoluteEncoder().getPosition());
+        Rotation2d.fromRotations(elevator2.getAbsoluteEncoder().getPosition()).times(shooterConstants.elevatorConversion);
 
     inputs.shooter2DutyCycle = shooter2.getAppliedOutput();
     inputs.shooter2Volts = shooter2.getBusVoltage();
@@ -116,6 +116,10 @@ public class ShooterIOSparks implements ShooterIO {
   public void setElevatorOffsets(Rotation2d offset1, Rotation2d offset2) {
     this.elevator1Offset = offset1;
     this.elevator2Offset = offset2;
+  }
+
+  public void setConveyorSpeed(double percent){
+    conveyor.set(percent);
   }
 
   public void setShooterSpeed(double speed1MPS, double speed2MPS) {

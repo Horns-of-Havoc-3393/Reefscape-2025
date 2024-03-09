@@ -62,11 +62,15 @@ public class SwerveBase extends SubsystemBase {
 
   public void setFO(ChassisSpeeds speeds, double lateralMaxSpeed) {
     double initial = Logger.getRealTimestamp();
+
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zGyro));
+
     SwerveDriveKinematics.desaturateWheelSpeeds(states, driveConstants.maxSpeedMPS);
+
     Logger.recordOutput("Drive/targetStates", states);
+
     for (int i = 0; i < 4; i++) {
       modules[i].setSwerveState(states[i]);
     }

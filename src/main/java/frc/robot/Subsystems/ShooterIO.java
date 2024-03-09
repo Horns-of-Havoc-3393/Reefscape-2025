@@ -26,6 +26,7 @@ public interface ShooterIO {
     double elevator1SetpointDeg;
     Rotation2d elevator1Position;
 
+
     double elevator2Volts;
     double elevator2DutyCycle;
     double elevator2SpeedRPS;

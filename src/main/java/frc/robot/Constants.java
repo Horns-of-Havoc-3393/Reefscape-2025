@@ -63,12 +63,23 @@ public final class Constants {
   }
 
   public static final class shooterConstants {
+
+
     public static int shootBeamID = 0;
     public static int intakeBeamID = 1;
 
     public static double shootWheelDiameter = 4.0;
 
-    public static double elevatorConversion = 72/11*50;
+    public static double elevatorConversion = 72 / 11 * 50;
+
+    public static double shooterP = 0;
+    public static double shooterI = 0;
+    public static double shooterD = 0;
+    
+    public static double elevatorP = 0;
+    public static double elevatorI = 0;
+    public static double elevatorD = 0;
+    public static double elevatorG = 0;
   }
 
   public static final Mode currentMode = Mode.SIM;

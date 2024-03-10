@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Constants.driveConstants;
@@ -31,6 +32,8 @@ public class RobotContainer {
   CANSparkFlex conveyor = new CANSparkFlex(25, MotorType.kBrushless);
   public SwerveBase swerve;
   public Shooter shooter;
+
+  public SwerveAbs absCmd;
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -61,9 +64,18 @@ public class RobotContainer {
     pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI);
     pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD);
 
+
+    absCmd = new SwerveAbs(swerve, controller);
   }
   private void configureBinds() {
-    swerve.setDefaultCommand(new SwerveAbs(swerve, controller));
+    controller
+        .rightStick()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  swerve.zeroGyro();
+                  System.out.println("zero");
+                }));
     controller.y().onTrue(Commands.runOnce(() -> shooter.setAngle(Shooter.angleSetpoints.SHOOT)));
     controller.b().onTrue(Commands.runOnce(() -> shooter.setAngle(Shooter.angleSetpoints.DRIVE)));
     controller.x().onTrue(Commands.runOnce(() -> shooter.setAngle(Shooter.angleSetpoints.AMP)));

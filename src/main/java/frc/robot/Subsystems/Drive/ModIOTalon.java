@@ -2,6 +2,7 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -31,6 +32,7 @@ public class ModIOTalon implements ModIO {
   StatusSignal<Double> steerPosAbsolute;
   StatusSignal<Double> driveVelErr;
   StatusSignal<Double> steerPosErr;
+  StatusSignal<Double> driveDutyCycle;
 
   VelocityDutyCycle driveRequest;
   PositionDutyCycle steerRequest;
@@ -70,6 +72,8 @@ public class ModIOTalon implements ModIO {
 
     driveVelErr = drive.getClosedLoopError();
     steerPosErr = steer.getClosedLoopError();
+
+    driveDutyCycle = drive.getDutyCycle();
   }
 
   Slot0Configs dSlot0;
@@ -86,7 +90,8 @@ public class ModIOTalon implements ModIO {
         steerPosRelative,
         steerPosAbsolute,
         driveVelErr,
-        steerPosErr);
+        steerPosErr,
+        driveDutyCycle);
 
     inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
     inputs.driveVelocityMPS =
@@ -99,6 +104,8 @@ public class ModIOTalon implements ModIO {
     inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();
     inputs.steerPosRelative =
         Rotation2d.fromRotations(steerPosRelative.getValueAsDouble()).minus(encoderOffset);
+
+    inputs.steerPosRelativePre = Rotation2d.fromRotations(steerPosRelative.getValueAsDouble());
     inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
     inputs.steerVolts = steerVolts.getValueAsDouble();
 
@@ -109,6 +116,8 @@ public class ModIOTalon implements ModIO {
 
     inputs.driveVelErr = driveVelErr.getValueAsDouble();
     inputs.steerPosErr = steerPosErr.getValueAsDouble();
+
+    inputs.driveDutyCycle = driveDutyCycle.getValueAsDouble();
 
     dSlot0 = new Slot0Configs();
     sSlot0 = new Slot0Configs();
@@ -125,6 +134,11 @@ public class ModIOTalon implements ModIO {
 
   public void setDriveDutyCycle(double volts) {
     drive.setControl(new DutyCycleOut(volts));
+  }
+
+  public void setCurrentLimit(double limit) {
+    CurrentLimitsConfigs conf = new CurrentLimitsConfigs();
+    conf.SupplyCurrentLimit = limit;
   }
 
   public void setSteerPos(double posDegrees) {

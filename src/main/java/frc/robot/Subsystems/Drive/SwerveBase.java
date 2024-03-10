@@ -86,6 +86,10 @@ public class SwerveBase extends SubsystemBase {
     return states;
   }
 
+  public void zeroGyro() {
+    posIO.zero();
+  }
+
   @Override
   public void periodic() {
     double initial = Logger.getRealTimestamp();

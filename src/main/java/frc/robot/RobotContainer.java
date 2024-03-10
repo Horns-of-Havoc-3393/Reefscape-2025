@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Constants.driveConstants;
@@ -17,6 +18,8 @@ public class RobotContainer {
   TalonFX[] steerMotors = new TalonFX[4];
   CANcoder[] encoders = new CANcoder[4];
   public SwerveBase swerve;
+
+  public SwerveAbs absCmd;
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -44,10 +47,19 @@ public class RobotContainer {
     pids.getDoubleTopic("steerP").publish().set(driveConstants.steerP);
     pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI);
     pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD);
+
+    absCmd = new SwerveAbs(swerve, controller);
   }
 
   private void configureBinds() {
-    swerve.setDefaultCommand(new SwerveAbs(swerve, controller));
+    controller
+        .rightStick()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  swerve.zeroGyro();
+                  System.out.println("zero");
+                }));
   }
 
   private void deviceFactory() {

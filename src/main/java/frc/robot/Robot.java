@@ -101,32 +101,23 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when autonomous is enabled. */
   @Override
-  public void autonomousInit() {
-    autoSelected = chooser.get();
-    System.out.println("Auto selected: " + autoSelected);
-  }
+  public void autonomousInit() {}
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-    switch (autoSelected) {
-      case customAuto:
-        // Put custom auto code here
-        break;
-      case defaultAuto:
-      default:
-        // Put default auto code here
-        break;
-    }
-  }
+  public void autonomousPeriodic() {}
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    robotContainer.swerve.zeroGyro();
+  }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    robotContainer.swerve.setDefaultCommand(robotContainer.absCmd);
+  }
 
   /** This function is called once when the robot is disabled. */
   @Override

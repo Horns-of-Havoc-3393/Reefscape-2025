@@ -19,6 +19,8 @@ public interface ModIO {
     double steerPosRaw;
     double driveVelErr;
     double steerPosErr;
+    double driveDutyCycle;
+    double currentLimit;
   }
 
   public default void updateInputs(ModIOIn inputs) {}

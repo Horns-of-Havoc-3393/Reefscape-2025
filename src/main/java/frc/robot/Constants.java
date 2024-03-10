@@ -27,10 +27,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
 
   public static final class driveConstants {
-    public static final double maxSpeedMPS = 10;
+    public static final double currentLimit = 20;
+
+    public static final double maxSpeedMPS = 6;
     public static final double maxRotRPS = 5;
-    public static final double lateralAccelLimitMPSPS = 7;
-    public static final double rotationalAccelLimitRPSPS = 13;
+    public static final double lateralAccelLimitMPSPS = 4;
+    public static final double rotationalAccelLimitRPSPS = 23;
     public static final double deadZone = 0.01;
 
     public static final double steeringRatio =

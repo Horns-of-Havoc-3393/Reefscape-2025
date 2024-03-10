@@ -25,6 +25,8 @@ public class SwerveMod {
   LoggedDashboardNumber steerI;
   LoggedDashboardNumber steerD;
 
+  int encoderResets = 0;
+
   public SwerveMod(TalonFX drive, TalonFX steer, CANcoder absEncoder, Rotation2d absEncoderOffset) {
     id = drive.getDeviceID();
 
@@ -35,6 +37,7 @@ public class SwerveMod {
     Logger.processInputs("Drive/Module" + drive.getDeviceID(), inputs);
 
     io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
+    io.setCurrentLimit(driveConstants.currentLimit);
 
     driveS = new LoggedDashboardNumber("PIDs/driveS", driveConstants.driveS);
     driveV = new LoggedDashboardNumber("PIDs/driveV", driveConstants.driveV);
@@ -53,7 +56,10 @@ public class SwerveMod {
     // io.setSteerPID(steerP.get(), steerI.get(), steerD.get());
     io.updateInputs(inputs);
 
-    io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
+    if (encoderResets < 10) {
+      io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
+      encoderResets++;
+    }
     Logger.processInputs("Drive/Module" + id, inputs);
     Logger.recordOutput("Timers/SwerveModPd", (Logger.getRealTimestamp() - initial) * 0.000001);
   }

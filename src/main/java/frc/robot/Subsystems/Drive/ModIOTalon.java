@@ -11,7 +11,6 @@ import com.ctre.phoenix6.controls.VelocityDutyCycle;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.driveConstants;
 
@@ -100,6 +99,8 @@ public class ModIOTalon implements ModIO {
     inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();
     inputs.steerPosRelative =
         Rotation2d.fromRotations(steerPosRelative.getValueAsDouble()).minus(encoderOffset);
+
+    inputs.steerPosRelativePre = Rotation2d.fromRotations(steerPosRelative.getValueAsDouble());
     inputs.steerCurrentAmps = steerCurrent.getValueAsDouble();
     inputs.steerVolts = steerVolts.getValueAsDouble();
 

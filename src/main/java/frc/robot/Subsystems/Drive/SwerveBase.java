@@ -58,6 +58,11 @@ public class SwerveBase extends SubsystemBase {
 
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
+
+    posIO.zero();
+    for (int i = 0; i < 4; i++) {
+      modules[i].updatePIDs();
+    }
   }
 
   public void setFO(ChassisSpeeds speeds, double lateralMaxSpeed) {

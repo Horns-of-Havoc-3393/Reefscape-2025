@@ -14,6 +14,7 @@ public interface ModIO {
     double driveVolts;
     double steerVolts;
     Rotation2d steerPosRelative;
+    Rotation2d steerPosRelativePre;
     Rotation2d steerPosAbsolute;
     double steerPosRaw;
     double driveVelErr;

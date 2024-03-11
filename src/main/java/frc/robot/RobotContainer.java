@@ -4,20 +4,17 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkFlex;
-import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
+import com.revrobotics.CANSparkMax;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
-import frc.robot.Subsystems.Shooter;
 import frc.robot.Subsystems.Drive.SwerveBase;
+import frc.robot.Subsystems.Shooter;
 
 public class RobotContainer {
 
@@ -26,7 +23,7 @@ public class RobotContainer {
   CANcoder[] encoders = new CANcoder[4];
   CANSparkMax elevator1 = new CANSparkMax(20, MotorType.kBrushless);
   CANSparkMax elevator2 = new CANSparkMax(21, MotorType.kBrushless);
-  CANSparkMax intake = new CANSparkMax(22,MotorType.kBrushless);
+  CANSparkMax intake = new CANSparkMax(22, MotorType.kBrushless);
   CANSparkFlex shooter1 = new CANSparkFlex(24, MotorType.kBrushless);
   CANSparkFlex shooter2 = new CANSparkFlex(23, MotorType.kBrushless);
   CANSparkFlex conveyor = new CANSparkFlex(25, MotorType.kBrushless);
@@ -64,9 +61,9 @@ public class RobotContainer {
     pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI);
     pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD);
 
-
     absCmd = new SwerveAbs(swerve, controller);
   }
+
   private void configureBinds() {
     controller
         .rightStick()
@@ -81,12 +78,34 @@ public class RobotContainer {
     controller.x().onTrue(Commands.runOnce(() -> shooter.setAngle(Shooter.angleSetpoints.AMP)));
     controller.a().onTrue(Commands.runOnce(() -> shooter.setAngle(Shooter.angleSetpoints.LOAD)));
 
-    controller.leftTrigger(0.5).whileTrue(Commands.run(() -> {
-      shooter.setConveyorSpeed(-0.5);
-      shooter.setSpeed(-0.5);
-    }).finallyDo(() -> shooter.setConveyorSpeed(0)));
-    controller.rightTrigger(0.5).whileTrue(Commands.run(() -> shooter.setConveyorSpeed(0.5)).finallyDo(() -> shooter.setConveyorSpeed(0)));
-    controller.rightBumper().whileTrue(Commands.run(() -> shooter.setSpeed(5)).finallyDo(() -> shooter.setSpeed(0)));
+    controller
+        .leftTrigger(0.5)
+        .whileTrue(
+            Commands.run(
+                    () -> {
+                      shooter.setConveyorSpeed(-0.5);
+                      shooter.setSpeed(-0.5);
+                      System.out.println("trigger");
+                    })
+                .finallyDo(() -> shooter.setConveyorSpeed(0)));
+    controller
+        .rightTrigger(0.5)
+        .whileTrue(
+            Commands.run(
+                    () -> {
+                      shooter.setConveyorSpeed(1);
+                      System.out.println("trigger2");
+                    })
+                .finallyDo(() -> shooter.setConveyorSpeed(0)));
+    controller
+        .rightBumper()
+        .whileTrue(
+            Commands.run(
+                    () -> {
+                      shooter.setSpeed(20);
+                      System.out.println("bumper");
+                    })
+                .finallyDo(() -> shooter.setSpeed(0)));
   }
 
   private void deviceFactory() {

@@ -24,14 +24,15 @@ public interface ShooterIO {
     double elevator1DutyCycle;
     double elevator1SpeedRPS;
     double elevator1SetpointDeg;
-    Rotation2d elevator1Position;
-
+    double elevator1Position;
+    double elevator1PositionPre;
 
     double elevator2Volts;
     double elevator2DutyCycle;
     double elevator2SpeedRPS;
     double elevator2SetpointDeg;
-    Rotation2d elevator2Position;
+    double elevator2Position;
+    double elevator2PositionPre;
 
     double conveyorVolts;
     double conveyorDutyCycle;

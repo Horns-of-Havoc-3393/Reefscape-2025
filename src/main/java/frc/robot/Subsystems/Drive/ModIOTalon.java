@@ -139,6 +139,12 @@ public class ModIOTalon implements ModIO {
   public void setCurrentLimit(double limit) {
     CurrentLimitsConfigs conf = new CurrentLimitsConfigs();
     conf.SupplyCurrentLimit = limit;
+    conf.SupplyCurrentThreshold = limit + 5;
+    conf.SupplyTimeThreshold = 0.1;
+    conf.StatorCurrentLimit = limit;
+    conf.StatorCurrentLimitEnable = true;
+    conf.SupplyCurrentLimitEnable = true;
+    drive.getConfigurator().apply(conf);
   }
 
   public void setSteerPos(double posDegrees) {

@@ -11,6 +11,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
+import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
@@ -34,6 +35,8 @@ public class RobotContainer {
 
   private final CommandXboxController controller = new CommandXboxController(0);
 
+  public autoCmd auto;
+
   public RobotContainer() {
     deviceFactory();
 
@@ -46,8 +49,10 @@ public class RobotContainer {
             driveConstants.absoluteEncoderOffsets,
             new PosIONavX(new AHRS()));
 
-    shooter = new Shooter(shooter1, shooter2, conveyor, elevator1, elevator2);
+    shooter = new Shooter(shooter1, shooter2, conveyor, elevator1, elevator2, intake);
     configureBinds();
+
+    auto = new autoCmd(swerve);
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable pids = inst.getTable("SmartDashboard/PIDs");
@@ -83,17 +88,21 @@ public class RobotContainer {
         .whileTrue(
             Commands.run(
                     () -> {
-                      shooter.setConveyorSpeed(-0.5);
+                      shooter.setConveyorSpeed(0.25);
                       shooter.setSpeed(-0.5);
                       System.out.println("trigger");
                     })
-                .finallyDo(() -> shooter.setConveyorSpeed(0)));
+                .finallyDo(
+                    () -> {
+                      shooter.setConveyorSpeed(0);
+                      shooter.setSpeed(0);
+                    }));
     controller
         .rightTrigger(0.5)
         .whileTrue(
             Commands.run(
                     () -> {
-                      shooter.setConveyorSpeed(1);
+                      shooter.setConveyorSpeed(-0.75);
                       System.out.println("trigger2");
                     })
                 .finallyDo(() -> shooter.setConveyorSpeed(0)));
@@ -102,7 +111,7 @@ public class RobotContainer {
         .whileTrue(
             Commands.run(
                     () -> {
-                      shooter.setSpeed(20);
+                      shooter.setSpeed(15);
                       System.out.println("bumper");
                     })
                 .finallyDo(() -> shooter.setSpeed(0)));

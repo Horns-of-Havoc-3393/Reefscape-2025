@@ -27,7 +27,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
 
   public static final class driveConstants {
-    public static final double currentLimit = 20;
+    public static final double currentLimit = 50; // Decrease when browning out
 
     public static final double maxSpeedMPS = 6;
     public static final double maxRotRPS = 5;
@@ -84,7 +84,7 @@ public final class Constants {
     public static double elevatorG = 0;
 
     public static Rotation2d elevatorOffset =
-        Rotation2d.fromRadians(-0.723).minus(Rotation2d.fromDegrees(90));
+        Rotation2d.fromRadians(2.924).minus(Rotation2d.fromDegrees(180));
     public static double shooterFF = 0;
   }
 

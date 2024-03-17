@@ -31,14 +31,19 @@ public class Shooter extends SubsystemBase {
   private Rotation2d angleSetpoint;
   private double speedSetpoint;
 
+  private int encoderUpdates = 0;
+
   public Shooter(
       CANSparkFlex topMotor,
       CANSparkFlex bottomMotor,
       CANSparkFlex conveyorMotor,
       CANSparkMax leftElevator,
-      CANSparkMax rightElevator) {
+      CANSparkMax rightElevator,
+      CANSparkMax intake) {
 
-    io = new ShooterIOSparks(topMotor, bottomMotor, conveyorMotor, leftElevator, rightElevator);
+    io =
+        new ShooterIOSparks(
+            topMotor, bottomMotor, conveyorMotor, leftElevator, rightElevator, intake);
     inputs = new ShooterIOInAutoLogged();
 
     shooterP = new LoggedDashboardNumber("Shooter/shooterP");
@@ -60,6 +65,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public void periodic() {
+    if (encoderUpdates < 10) {
+      io.setElevatorOffsets(
+          inputs.shooterAngleAbs.minus(Rotation2d.fromRotations(inputs.elevator1Position)),
+          inputs.shooterAngleAbs.minus(Rotation2d.fromRotations(inputs.elevator1Position)));
+    }
     io.updateInputs(inputs);
     Logger.processInputs("Shooter", inputs);
     io.setShooterPID(shooterP.get(), shooterI.get(), shooterD.get(), shooterFF.get());

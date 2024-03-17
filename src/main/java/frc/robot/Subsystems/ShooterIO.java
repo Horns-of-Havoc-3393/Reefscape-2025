@@ -38,6 +38,10 @@ public interface ShooterIO {
     double conveyorDutyCycle;
     double conveyorSpeedRPS;
 
+    double intakeVolts;
+    double intakeDutyCycle;
+    double intakeSpeedRPS;
+
     Rotation2d shooterAngleAbs;
 
     boolean beamBreak;

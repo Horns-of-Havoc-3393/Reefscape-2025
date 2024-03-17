@@ -15,6 +15,7 @@ public class ShooterIOSparks implements ShooterIO {
   CANSparkFlex conveyor;
   CANSparkMax elevator1;
   CANSparkMax elevator2;
+  CANSparkMax intake;
 
   DutyCycleEncoder absEncoder;
 
@@ -48,12 +49,14 @@ public class ShooterIOSparks implements ShooterIO {
       CANSparkFlex shooter2,
       CANSparkFlex conveyor,
       CANSparkMax elevator1,
-      CANSparkMax elevator2) {
+      CANSparkMax elevator2,
+      CANSparkMax intake) {
     this.shooter1 = shooter1;
     this.shooter2 = shooter2;
     this.elevator1 = elevator1;
     this.elevator2 = elevator2;
     this.conveyor = conveyor;
+    this.intake = intake;
 
     elevator1Offset = new Rotation2d(0);
     elevator2Offset = new Rotation2d(0);
@@ -110,18 +113,22 @@ public class ShooterIOSparks implements ShooterIO {
         ((0.25 + inputs.elevator1PositionPre / shooterConstants.elevatorConversion)
             + elevator1Offset.getRotations());
 
-    inputs.elevator2DutyCycle = elevator1.getAppliedOutput();
-    inputs.elevator2Volts = elevator1.getBusVoltage();
-    inputs.elevator2SpeedRPS = elevator1.getEncoder().getVelocity();
+    inputs.elevator2DutyCycle = elevator2.getAppliedOutput();
+    inputs.elevator2Volts = elevator2.getBusVoltage();
+    inputs.elevator2SpeedRPS = elevator2.getEncoder().getVelocity();
     inputs.elevator2SetpointDeg = elevator2Setpoint;
-    inputs.elevator2PositionPre = elevator1.getEncoder().getPosition();
+    inputs.elevator2PositionPre = elevator2.getEncoder().getPosition() * -1;
     inputs.elevator2Position =
-        ((0.25 + inputs.elevator1PositionPre / shooterConstants.elevatorConversion)
-            + elevator1Offset.getRotations());
+        ((0.25 + inputs.elevator2PositionPre / shooterConstants.elevatorConversion)
+            + elevator2Offset.getRotations());
 
     inputs.conveyorDutyCycle = conveyor.getAppliedOutput();
     inputs.conveyorVolts = conveyor.getBusVoltage();
     inputs.conveyorSpeedRPS = conveyor.getEncoder().getPosition();
+
+    inputs.intakeDutyCycle = intake.getAppliedOutput();
+    inputs.intakeSpeedRPS = intake.getEncoder().getVelocity();
+    inputs.intakeVolts = intake.getBusVoltage();
 
     inputs.shooterAngleAbs =
         Rotation2d.fromRotations(absEncoder.getAbsolutePosition())
@@ -172,13 +179,22 @@ public class ShooterIOSparks implements ShooterIO {
   }
 
   public void setElevatorAngle(Rotation2d angle) {
+    elevator1Setpoint = angle.getDegrees();
+    elevator2Setpoint = angle.getDegrees();
+
+    double elev1Pos =
+        ((0.25 + elevator1.getEncoder().getPosition() / shooterConstants.elevatorConversion)
+            + elevator1Offset.getRotations());
+    double elev2Pos =
+        ((0.25 + elevator2.getEncoder().getPosition() / shooterConstants.elevatorConversion)
+            + elevator2Offset.getRotations());
 
     elevator1.set(
-        elevator1PID.calculate(elevator1.getEncoder().getPosition(), angle.getRotations())
-            + (Math.cos(elevator1.getEncoder().getPosition()) * elevatorG));
+        -1 * elevator1PID.calculate(elev1Pos, angle.getRotations())
+            + (Math.cos(elev1Pos * 2 * Math.PI) * elevatorG));
     elevator2.set(
-        elevator2PID.calculate(elevator2.getEncoder().getPosition(), angle.getRotations())
-            + (Math.cos(elevator2.getEncoder().getPosition()) * elevatorG));
+        1 * elevator2PID.calculate(elev2Pos, angle.getRotations())
+            + (Math.cos(elev2Pos * 2 * Math.PI) * elevatorG));
   }
 
   public void setElevatorDutyCycle(double percent) {
@@ -191,11 +207,15 @@ public class ShooterIOSparks implements ShooterIO {
     elevator1PID.setI(i);
     elevator1PID.setD(d);
 
-    elevator1PID.setP(p);
-    elevator1PID.setI(i);
-    elevator1PID.setD(d);
+    elevator2PID.setP(p);
+    elevator2PID.setI(i);
+    elevator2PID.setD(d);
 
     elevatorG = g;
+  }
+
+  public void setIntakeSpeed(double percent) {
+    intake.set(percent);
   }
 
   public void setInversions(Boolean shooter1, Boolean shooter2, Boolean conveyor) {

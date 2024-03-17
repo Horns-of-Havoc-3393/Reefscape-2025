@@ -101,17 +101,19 @@ public class Robot extends LoggedRobot {
 
   /** This function is called once when autonomous is enabled. */
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    robotContainer.swerve.zeroGyro();
+  }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    robotContainer.swerve.setDefaultCommand(robotContainer.auto);
+  }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {
-    robotContainer.swerve.zeroGyro();
-  }
+  public void teleopInit() {}
 
   /** This function is called periodically during operator control. */
   @Override

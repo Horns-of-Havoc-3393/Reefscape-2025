@@ -44,7 +44,7 @@ public class SwerveAbs extends Command {
 
     xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
     yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
-    rLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
+    rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS);
   }
 
   public void execute() {

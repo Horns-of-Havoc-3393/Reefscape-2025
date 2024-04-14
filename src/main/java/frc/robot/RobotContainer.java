@@ -89,7 +89,7 @@ public class RobotContainer {
             Commands.run(
                     () -> {
                       shooter.setConveyorSpeed(0.25);
-                      shooter.setSpeed(-0.5);
+                      shooter.setSpeed(-5);
                       System.out.println("trigger");
                     })
                 .finallyDo(
@@ -105,7 +105,16 @@ public class RobotContainer {
                       shooter.setConveyorSpeed(-0.75);
                       System.out.println("trigger2");
                     })
-                .finallyDo(() -> shooter.setConveyorSpeed(0)));
+                .beforeStarting(
+                    Commands.runOnce(
+                        () -> {
+                          shooter.setSpeed(15);
+                        }))
+                .finallyDo(
+                    () -> {
+                      shooter.setConveyorSpeed(0);
+                      shooter.setSpeed(0);
+                    }));
     controller
         .rightBumper()
         .whileTrue(

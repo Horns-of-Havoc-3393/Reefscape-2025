@@ -27,12 +27,12 @@ import edu.wpi.first.math.geometry.Translation2d;
 public final class Constants {
 
   public static final class driveConstants {
-    public static final double currentLimit = 50; // Decrease when browning out
+    public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 6;
+    public static final double maxSpeedMPS = 5;
     public static final double maxRotRPS = 5;
-    public static final double lateralAccelLimitMPSPS = 8;
-    public static final double rotationalAccelLimitRPSPS = 50;
+    public static final double lateralAccelLimitMPSPS = 20;
+    public static final double rotationalAccelLimitRPSPS = 20;
     public static final double deadZone = 0.01;
 
     public static final double steeringRatio =

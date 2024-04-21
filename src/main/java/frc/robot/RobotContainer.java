@@ -16,6 +16,7 @@ import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
 import frc.robot.Subsystems.Shooter;
+import org.littletonrobotics.junction.Logger;
 
 public class RobotContainer {
 
@@ -36,6 +37,8 @@ public class RobotContainer {
   private final CommandXboxController controller = new CommandXboxController(0);
 
   public autoCmd auto;
+
+  long spinUp;
 
   public RobotContainer() {
     deviceFactory();
@@ -102,13 +105,16 @@ public class RobotContainer {
         .whileTrue(
             Commands.run(
                     () -> {
-                      shooter.setConveyorSpeed(-0.75);
-                      System.out.println("trigger2");
+                      if ((Logger.getRealTimestamp() - spinUp) * 0.000001 > 1) {
+                        shooter.setConveyorSpeed(-0.75);
+                        System.out.println("trigger2");
+                      }
                     })
                 .beforeStarting(
                     Commands.runOnce(
                         () -> {
                           shooter.setSpeed(15);
+                          spinUp = Logger.getRealTimestamp();
                         }))
                 .finallyDo(
                     () -> {

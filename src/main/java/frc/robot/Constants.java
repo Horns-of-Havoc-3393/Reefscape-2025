@@ -29,7 +29,7 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 5;
+    public static final double maxSpeedMPS = 0.6;
     public static final double maxRotRPS = 5;
     public static final double lateralAccelLimitMPSPS = 20;
     public static final double rotationalAccelLimitRPSPS = 20;

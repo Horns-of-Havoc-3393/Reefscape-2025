@@ -34,11 +34,14 @@ public class ShooterIOSparks implements ShooterIO {
   PIDController shooter1PID;
   PIDController shooter2PID;
 
+  PIDController conveyorPID;
+
   PIDController elevator1PID;
   PIDController elevator2PID;
 
   double elevatorG;
   double shooterFF;
+  double conveyorFF;
 
   Rotation2d elevator1Offset;
   Rotation2d elevator2Offset;
@@ -80,8 +83,15 @@ public class ShooterIOSparks implements ShooterIO {
         new PIDController(
             shooterConstants.elevatorP, shooterConstants.elevatorI, shooterConstants.elevatorD);
 
+    conveyorPID =
+        new PIDController(
+            shooterConstants.conveyorP, shooterConstants.conveyorI, shooterConstants.conveyorD);
+
+    conveyorPID.setIntegratorRange(-1, 1);
+
     elevatorG = shooterConstants.elevatorG;
     shooterFF = shooterConstants.shooterFF;
+    conveyorFF = shooterConstants.conveyorFF;
 
     shooter1.setIdleMode(IdleMode.kBrake);
     shooter2.setIdleMode(IdleMode.kBrake);
@@ -124,7 +134,7 @@ public class ShooterIOSparks implements ShooterIO {
 
     inputs.conveyorDutyCycle = conveyor.getAppliedOutput();
     inputs.conveyorVolts = conveyor.getBusVoltage();
-    inputs.conveyorSpeedRPS = conveyor.getEncoder().getPosition();
+    inputs.conveyorSpeedRPS = conveyor.getEncoder().getVelocity() / 60;
 
     inputs.intakeDutyCycle = intake.getAppliedOutput();
     inputs.intakeSpeedRPS = intake.getEncoder().getVelocity();
@@ -143,8 +153,8 @@ public class ShooterIOSparks implements ShooterIO {
     this.elevator2Offset = offset2;
   }
 
-  public void setConveyorSpeed(double percent) {
-    conveyor.set(percent);
+  public void setConveyorSpeed(double speed) {
+    conveyor.set(speed);
   }
 
   public void setShooterSpeed(double speed1MPS, double speed2MPS) {
@@ -176,6 +186,13 @@ public class ShooterIOSparks implements ShooterIO {
     shooter2PID.setD(d);
 
     shooterFF = ff;
+  }
+
+  public void setConveyorPID(double p, double i, double d, double ff) {
+    conveyorPID.setP(p);
+    conveyorPID.setP(i);
+    conveyorPID.setP(d);
+    conveyorFF = ff;
   }
 
   public void setElevatorAngle(Rotation2d angle) {

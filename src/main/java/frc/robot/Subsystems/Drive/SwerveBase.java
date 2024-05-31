@@ -11,7 +11,6 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
 import org.littletonrobotics.junction.Logger;
@@ -72,7 +71,7 @@ public class SwerveBase extends SubsystemBase {
         kinematics.toSwerveModuleStates(
             ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zGyro));
 
-    SwerveDriveKinematics.desaturateWheelSpeeds(states, driveConstants.maxSpeedMPS);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, lateralMaxSpeed);
 
     Logger.recordOutput("Drive/targetStates", states);
 

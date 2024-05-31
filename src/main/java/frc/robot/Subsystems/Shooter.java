@@ -28,6 +28,11 @@ public class Shooter extends SubsystemBase {
   private LoggedDashboardNumber elevatorD;
   private LoggedDashboardNumber elevatorG;
 
+  private LoggedDashboardNumber conveyorP;
+  private LoggedDashboardNumber conveyorI;
+  private LoggedDashboardNumber conveyorD;
+  private LoggedDashboardNumber conveyorFF;
+
   private Rotation2d angleSetpoint;
   private double speedSetpoint;
 
@@ -54,6 +59,10 @@ public class Shooter extends SubsystemBase {
     elevatorI = new LoggedDashboardNumber("Shooter/elevatorI");
     elevatorD = new LoggedDashboardNumber("Shooter/elevatorD");
     elevatorG = new LoggedDashboardNumber("Shooter/elevatorG");
+    conveyorP = new LoggedDashboardNumber("Shooter/conveyorP");
+    conveyorI = new LoggedDashboardNumber("Shooter/conveyorI");
+    conveyorD = new LoggedDashboardNumber("Shooter/conveyorD");
+    conveyorFF = new LoggedDashboardNumber("Shooter/conveyorFF");
 
     angleSetpoint = new Rotation2d(0);
     speedSetpoint = 0.0;
@@ -74,6 +83,7 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter", inputs);
     io.setShooterPID(shooterP.get(), shooterI.get(), shooterD.get(), shooterFF.get());
     io.setElevatorPID(elevatorP.get(), elevatorI.get(), elevatorD.get(), elevatorG.get());
+    io.setConveyorPID(conveyorP.get(), conveyorI.get(), conveyorD.get(), conveyorFF.get());
 
     io.setElevatorAngle(angleSetpoint);
     io.setShooterSpeed(speedSetpoint, -speedSetpoint);
@@ -87,7 +97,7 @@ public class Shooter extends SubsystemBase {
     speedSetpoint = speedMPS;
   }
 
-  public void setConveyorSpeed(double percent) {
-    io.setConveyorSpeed(percent);
+  public void setConveyorSpeed(double speed) {
+    io.setConveyorSpeed(speed);
   }
 }

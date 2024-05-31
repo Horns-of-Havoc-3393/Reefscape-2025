@@ -29,9 +29,9 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 0.6;
+    public static final double maxSpeedMPS = 1.1;
     public static final double maxRotRPS = 5;
-    public static final double lateralAccelLimitMPSPS = 20;
+    public static final double lateralAccelLimitMPSPS = 4;
     public static final double rotationalAccelLimitRPSPS = 20;
     public static final double deadZone = 0.01;
 
@@ -82,6 +82,11 @@ public final class Constants {
     public static double elevatorI = 0;
     public static double elevatorD = 0;
     public static double elevatorG = 0;
+
+    public static double conveyorP = 0;
+    public static double conveyorI = 0;
+    public static double conveyorD = 0;
+    public static double conveyorFF = 0;
 
     public static Rotation2d elevatorOffset =
         Rotation2d.fromRadians(2.924).minus(Rotation2d.fromDegrees(180));

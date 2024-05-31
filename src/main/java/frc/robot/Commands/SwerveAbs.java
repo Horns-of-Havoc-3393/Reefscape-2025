@@ -37,6 +37,7 @@ public class SwerveAbs extends Command {
 
     deadzone = new LoggedDashboardNumber("Control/deadzone");
     lateralMaxSpeed = new LoggedDashboardNumber("Control/lateralMaxSpeed");
+    lateralMaxSpeed.set(driveConstants.maxSpeedMPS);
     rotationalMaxSpeed = new LoggedDashboardNumber("Control/rotationalMaxSpeed");
     latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
     rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
@@ -57,16 +58,17 @@ public class SwerveAbs extends Command {
       yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
       rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS);
     }
+    double maxSpeed = lateralMaxSpeed.get();
     if ((Math.pow(controller.getLeftY(), 2)
             + Math.pow(controller.getLeftX(), 2)
             + Math.pow(controller.getRightX(), 2))
         > driveConstants.deadZone) {
       swerve.setFO(
           new ChassisSpeeds(
-              xLimit.calculate(controller.getLeftY() * driveConstants.maxSpeedMPS),
-              yLimit.calculate(controller.getLeftX() * driveConstants.maxSpeedMPS),
+              xLimit.calculate(controller.getLeftY() * maxSpeed),
+              yLimit.calculate(controller.getLeftX() * maxSpeed),
               rLimit.calculate(controller.getRightX() * -1 * driveConstants.maxRotRPS)),
-          driveConstants.maxSpeedMPS);
+          5);
     } else {
       swerve.setFO(
           new ChassisSpeeds(xLimit.calculate(0), yLimit.calculate(0), rLimit.calculate(0)),

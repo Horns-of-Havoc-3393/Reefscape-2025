@@ -30,6 +30,8 @@ public class SwerveBase extends SubsystemBase {
   LoggedDashboardBoolean update;
   LoggedDashboardBoolean zeroGyro;
 
+  private double initialTimestamp;
+
   public SwerveBase(
       TalonFX[] driveMotors,
       TalonFX[] steerMotors,
@@ -95,7 +97,9 @@ public class SwerveBase extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double initial = Logger.getRealTimestamp();
+    Logger.recordOutput(
+        "Timers/SwerveBasePdFreq", 1 / ((Logger.getRealTimestamp() - initialTimestamp) * 0.000001));
+    initialTimestamp = Logger.getRealTimestamp();
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
 
@@ -105,6 +109,9 @@ public class SwerveBase extends SubsystemBase {
 
     for (var module : modules) {
       module.periodic();
+      if (update.get()) {
+        module.updatePIDs();
+      }
     }
 
     SwerveModuleState[] states = getStates();
@@ -117,6 +124,7 @@ public class SwerveBase extends SubsystemBase {
     Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);
 
     Logger.recordOutput("ChassisAngle", inputs.zGyro);
-    Logger.recordOutput("Timers/SwerveBasePd", (Logger.getRealTimestamp() - initial) * 0.000001);
+    Logger.recordOutput(
+        "Timers/SwerveBasePd", (Logger.getRealTimestamp() - initialTimestamp) * 0.000001);
   }
 }

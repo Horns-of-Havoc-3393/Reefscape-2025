@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.shooterConstants;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
@@ -52,9 +53,13 @@ public class Shooter extends SubsystemBase {
     inputs = new ShooterIOInAutoLogged();
 
     shooterP = new LoggedDashboardNumber("Shooter/shooterP");
+    shooterP.set(shooterConstants.shooterP);
     shooterI = new LoggedDashboardNumber("Shooter/shooterI");
+    shooterI.set(shooterConstants.shooterI);
     shooterD = new LoggedDashboardNumber("Shooter/shooterD");
+    shooterD.set(shooterConstants.shooterD);
     shooterFF = new LoggedDashboardNumber("Shooter/shooterFF");
+    shooterFF.set(shooterConstants.shooterFF);
     elevatorP = new LoggedDashboardNumber("Shooter/elevatorP");
     elevatorI = new LoggedDashboardNumber("Shooter/elevatorI");
     elevatorD = new LoggedDashboardNumber("Shooter/elevatorD");

@@ -29,7 +29,7 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 1.1;
+    public static final double maxSpeedMPS = 0.6;
     public static final double maxRotRPS = 5;
     public static final double lateralAccelLimitMPSPS = 4;
     public static final double rotationalAccelLimitRPSPS = 20;
@@ -69,6 +69,7 @@ public final class Constants {
 
     public static int shootBeamID = 0;
     public static int intakeBeamID = 1;
+    public static double shooterSpeed = 15;
 
     public static double shootWheelDiameter = 4.0;
 
@@ -90,7 +91,7 @@ public final class Constants {
 
     public static Rotation2d elevatorOffset =
         Rotation2d.fromRadians(2.924).minus(Rotation2d.fromDegrees(180));
-    public static double shooterFF = 0;
+    public static double shooterFF = 0.0095;
   }
 
   public static final Mode currentMode = Mode.SIM;

@@ -40,14 +40,22 @@ public class SwerveMod {
     io.setCurrentLimit(driveConstants.currentLimit);
 
     driveS = new LoggedDashboardNumber("PIDs/driveS", driveConstants.driveS);
+    driveS.set(driveConstants.driveS);
     driveV = new LoggedDashboardNumber("PIDs/driveV", driveConstants.driveV);
+    driveV.set(driveConstants.driveV);
     driveP = new LoggedDashboardNumber("PIDs/driveP", driveConstants.driveP);
+    driveP.set(driveConstants.driveP);
     driveI = new LoggedDashboardNumber("PIDs/driveI", driveConstants.driveI);
+    driveI.set(driveConstants.driveI);
     driveD = new LoggedDashboardNumber("PIDs/driveD", driveConstants.driveD);
+    driveD.set(driveConstants.driveD);
 
     steerP = new LoggedDashboardNumber("PIDs/steerP", driveConstants.driveP);
+    steerP.set(driveConstants.steerP);
     steerI = new LoggedDashboardNumber("PIDs/steerI", driveConstants.driveI);
+    steerI.set(driveConstants.steerI);
     steerD = new LoggedDashboardNumber("PIDs/steerD", driveConstants.driveD);
+    steerD.set(driveConstants.steerD);
   }
 
   public void periodic() {
@@ -65,13 +73,15 @@ public class SwerveMod {
   }
 
   public void updatePIDs() {
-    io.setDriveVelPID(
-        driveConstants.driveS,
-        driveConstants.driveV,
-        driveConstants.driveP,
-        driveConstants.driveI,
-        driveConstants.driveD);
-    io.setSteerPID(driveConstants.steerP, driveConstants.driveI, driveConstants.driveD);
+    // io.setDriveVelPID(
+    //     driveConstants.driveS,
+    //     driveConstants.driveV,
+    //     driveConstants.driveP,
+    //     driveConstants.driveI,
+    //     driveConstants.driveD);
+    // io.setSteerPID(driveConstants.steerP, driveConstants.driveI, driveConstants.driveD);
+    io.setDriveVelPID(driveS.get(), driveV.get(), driveP.get(), driveI.get(), driveD.get());
+    io.setSteerPID(steerP.get(), steerI.get(), steerD.get());
   }
 
   public void setSwerveState(SwerveModuleState state) {

@@ -21,6 +21,8 @@ public interface ModIO {
     double steerPosErr;
     double driveDutyCycle;
     double currentLimit;
+    Rotation2d targetAngle;
+    double targetSpeed;
   }
 
   public default void updateInputs(ModIOIn inputs) {}

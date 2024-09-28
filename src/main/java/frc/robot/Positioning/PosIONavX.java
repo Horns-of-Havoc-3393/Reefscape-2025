@@ -6,10 +6,12 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
 public class PosIONavX implements PosIO {
 
-  AHRS navx;
+  // AHRS navx;
+  ADXRS450_Gyro gyro;
 
   DoubleSubscriber estXSub;
   DoubleSubscriber estYSub;
@@ -21,7 +23,8 @@ public class PosIONavX implements PosIO {
   DoublePublisher zAccelPub;
 
   public PosIONavX(AHRS navx) {
-    this.navx = navx;
+    // this.navx = navx;
+    this.gyro = new ADXRS450_Gyro();
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable kalmanT = inst.getTable("/Kalman");
@@ -37,13 +40,13 @@ public class PosIONavX implements PosIO {
 
   @Override
   public void updateInputs(PosIOIn inputs) {
-    inputs.xGyro = Rotation2d.fromDegrees(navx.getRoll());
-    inputs.yGyro = Rotation2d.fromDegrees(navx.getPitch());
-    inputs.zGyro = Rotation2d.fromDegrees(navx.getYaw()).times(-1);
+    inputs.xGyro = Rotation2d.fromDegrees(0);
+    inputs.yGyro = Rotation2d.fromDegrees(0);
+    inputs.zGyro = Rotation2d.fromDegrees(gyro.getAngle() * -1);
 
-    inputs.xAccel = navx.getRawAccelX();
-    inputs.yAccel = navx.getRawAccelY();
-    inputs.zAccel = navx.getRawAccelZ();
+    inputs.xAccel = 0.0; // navx.getRawAccelX();
+    inputs.yAccel = 0.0; // navx.getRawAccelY();
+    inputs.zAccel = 0.0; // navx.getRawAccelZ();
 
     inputs.kGain = kGainSub.get();
     inputs.estX = estXSub.get();
@@ -52,6 +55,6 @@ public class PosIONavX implements PosIO {
   }
 
   public void zero() {
-    navx.reset();
+    gyro.reset();
   }
 }

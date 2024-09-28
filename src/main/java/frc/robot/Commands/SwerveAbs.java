@@ -40,7 +40,9 @@ public class SwerveAbs extends Command {
     lateralMaxSpeed.set(driveConstants.maxSpeedMPS);
     rotationalMaxSpeed = new LoggedDashboardNumber("Control/rotationalMaxSpeed");
     latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
+    latAccLimit.set(driveConstants.lateralAccelLimitMPSPS);
     rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
+    rotAccLimit.set(driveConstants.rotationalAccelLimitRPSPS);
     update = new LoggedDashboardBoolean("update");
 
     xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
@@ -54,9 +56,9 @@ public class SwerveAbs extends Command {
     Logger.recordOutput("Drive/AbsCMD/yAxis", controller.getLeftX());
     Logger.recordOutput("Drive/AbsCMD/betaAxis", controller.getRightX());
     if (update.get()) {
-      xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
-      yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
-      rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS);
+      xLimit = new SlewRateLimiter(latAccLimit.get());
+      yLimit = new SlewRateLimiter(latAccLimit.get());
+      rLimit = new SlewRateLimiter(rotAccLimit.get());
     }
     double maxSpeed = lateralMaxSpeed.get();
     if ((Math.pow(controller.getLeftY(), 2)

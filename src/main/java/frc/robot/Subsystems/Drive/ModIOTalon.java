@@ -40,6 +40,12 @@ public class ModIOTalon implements ModIO {
   Rotation2d absoluteEncoderOffset = new Rotation2d(0);
   Rotation2d encoderOffset = new Rotation2d(0);
 
+  Rotation2d targetRotation = new Rotation2d(0);
+  double targetSpeed = 0.0;
+
+  Slot0Configs dSlot0;
+  Slot0Configs sSlot0;
+
   public ModIOTalon(
       TalonFX drive, TalonFX steer, CANcoder absEncoder, Rotation2d absEncoderOffset) {
 
@@ -74,10 +80,13 @@ public class ModIOTalon implements ModIO {
     steerPosErr = steer.getClosedLoopError();
 
     driveDutyCycle = drive.getDutyCycle();
-  }
 
-  Slot0Configs dSlot0;
-  Slot0Configs sSlot0;
+    dSlot0 = new Slot0Configs();
+    sSlot0 = new Slot0Configs();
+
+    driveRequest = new VelocityDutyCycle(0.0);
+    steerRequest = new PositionDutyCycle(0.0);
+  }
 
   public void updateInputs(ModIOIn inputs) {
     BaseStatusSignal.refreshAll(
@@ -119,14 +128,12 @@ public class ModIOTalon implements ModIO {
 
     inputs.driveDutyCycle = driveDutyCycle.getValueAsDouble();
 
-    dSlot0 = new Slot0Configs();
-    sSlot0 = new Slot0Configs();
-
-    driveRequest = new VelocityDutyCycle(0.0);
-    steerRequest = new PositionDutyCycle(0.0);
+    inputs.targetAngle = targetRotation;
+    inputs.targetSpeed = targetSpeed;
   }
 
   public void setDriveSpeed(double speedMPS) {
+    targetSpeed = speedMPS;
     double outputSpeed =
         speedMPS / (driveConstants.wheelRadius * 0.0254 * 2 * Math.PI) * driveConstants.driveRatio;
     drive.setControl(driveRequest.withVelocity(outputSpeed));
@@ -147,8 +154,9 @@ public class ModIOTalon implements ModIO {
     drive.getConfigurator().apply(conf);
   }
 
-  public void setSteerPos(double posDegrees) {
-    steer.setControl(steerRequest.withSlot(0).withPosition(posDegrees));
+  public void setSteerPos(double posRotations) {
+    targetRotation = Rotation2d.fromRotations(posRotations);
+    steer.setControl(steerRequest.withSlot(0).withPosition(posRotations));
   }
 
   public void setSteerDutyCycle(double volts) {

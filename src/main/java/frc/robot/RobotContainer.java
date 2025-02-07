@@ -10,7 +10,6 @@ import com.studica.frc.AHRS;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
@@ -18,8 +17,7 @@ import frc.robot.Constants.driveConstants;
 import frc.robot.Constants.shooterConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class RobotContainer {
 
@@ -34,7 +32,7 @@ public class RobotContainer {
   SparkFlex conveyor = new SparkFlex(25, MotorType.kBrushless);
   public SwerveBase swerve;
 
-  LoggedDashboardNumber shooterSpeed = new LoggedDashboardNumber("Shooter/speed", 0.0);
+  LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("/SmartDashboard/Shooter/speed", 0.0);
 
   public SwerveAbs absCmd;
 

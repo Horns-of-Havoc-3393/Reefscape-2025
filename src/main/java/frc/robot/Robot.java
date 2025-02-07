@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+// import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
@@ -30,11 +30,11 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
 
-  private static final String defaultAuto = "Default";
-  private static final String customAuto = "My Auto";
-  private String autoSelected;
-  private final LoggedDashboardChooser<String> chooser =
-      new LoggedDashboardChooser<>("Auto Choices");
+  // private static final String defaultAuto = "Default";
+  // private static final String customAuto = "My Auto";
+  // private String autoSelected;
+  // private final LoggedDashboardChooser<String> chooser =
+  //     new LoggedDashboardChooser<>("Auto Choices");
 
   private RobotContainer robotContainer;
   /**

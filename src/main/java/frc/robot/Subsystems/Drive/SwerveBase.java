@@ -15,6 +15,7 @@ import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class SwerveBase extends SubsystemBase {
   PosIONavX posIO;
@@ -27,8 +28,8 @@ public class SwerveBase extends SubsystemBase {
   DoublePublisher xVelPub;
   DoublePublisher yVelPub;
 
-  LoggedDashboardBoolean update;
-  LoggedDashboardBoolean zeroGyro;
+  LoggedNetworkBoolean update;
+  LoggedNetworkBoolean zeroGyro;
 
   private double initialTimestamp;
 
@@ -54,8 +55,8 @@ public class SwerveBase extends SubsystemBase {
     xVelPub = table.getDoubleTopic("xVelocity").publish();
     yVelPub = table.getDoubleTopic("yVelocity").publish();
 
-    update = new LoggedDashboardBoolean("update", false);
-    zeroGyro = new LoggedDashboardBoolean("Control/zeroGyro", false);
+    update = new LoggedNetworkBoolean("/SmartDashboard/update", false);
+    zeroGyro = new LoggedNetworkBoolean("/SmartDashboard/Control/zeroGyro", false);
 
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);

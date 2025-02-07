@@ -2,13 +2,14 @@ package frc.robot.Commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Subsystems.Drive.SwerveBase;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedDashboardBoolean;
-import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class SwerveAbs extends Command {
 
@@ -16,17 +17,17 @@ public class SwerveAbs extends Command {
 
   CommandXboxController controller;
 
-  LoggedDashboardNumber deadzone;
-  LoggedDashboardNumber lateralMaxSpeed;
-  LoggedDashboardNumber rotationalMaxSpeed;
+  LoggedNetworkNumber deadzone;
+  LoggedNetworkNumber lateralMaxSpeed;
+  LoggedNetworkNumber rotationalMaxSpeed;
 
   SlewRateLimiter xLimit;
   SlewRateLimiter yLimit;
   SlewRateLimiter rLimit;
 
-  LoggedDashboardNumber latAccLimit;
-  LoggedDashboardNumber rotAccLimit;
-  LoggedDashboardBoolean update;
+  LoggedNetworkNumber latAccLimit;
+  LoggedNetworkNumber rotAccLimit;
+  LoggedNetworkBoolean update;
 
   public SwerveAbs(SwerveBase swerve, CommandXboxController controller) {
     this.controller = controller;
@@ -35,15 +36,15 @@ public class SwerveAbs extends Command {
     this.addRequirements(swerve);
     System.out.println("initCMD");
 
-    deadzone = new LoggedDashboardNumber("Control/deadzone");
-    lateralMaxSpeed = new LoggedDashboardNumber("Control/lateralMaxSpeed");
+    deadzone = new LoggedNetworkNumber("/SmartDashboard/Control/deadzone");
+    lateralMaxSpeed = new LoggedNetworkNumber("/SmartDashboard/Control/lateralMaxSpeed");
     lateralMaxSpeed.set(driveConstants.maxSpeedMPS);
-    rotationalMaxSpeed = new LoggedDashboardNumber("Control/rotationalMaxSpeed");
-    latAccLimit = new LoggedDashboardNumber("Control/LateralAcceleration");
+    rotationalMaxSpeed = new LoggedNetworkNumber("/SmartDashboard/Control/rotationalMaxSpeed");
+    latAccLimit = new LoggedNetworkNumber("/SmartDashboard/Control/LateralAcceleration");
     latAccLimit.set(driveConstants.lateralAccelLimitMPSPS);
-    rotAccLimit = new LoggedDashboardNumber("Control/RotationalAcceleration");
+    rotAccLimit = new LoggedNetworkNumber("/SmartDashboard/Control/RotationalAcceleration");
     rotAccLimit.set(driveConstants.rotationalAccelLimitRPSPS);
-    update = new LoggedDashboardBoolean("update");
+    update = new LoggedNetworkBoolean("/SmartDashboard/update");
 
     xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
     yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
@@ -51,7 +52,7 @@ public class SwerveAbs extends Command {
   }
 
   public void execute() {
-    double initial = Logger.getRealTimestamp();
+    double initial = RobotController.getFPGATime();
     Logger.recordOutput("Drive/AbsCMD/xAxis", controller.getLeftY());
     Logger.recordOutput("Drive/AbsCMD/yAxis", controller.getLeftX());
     Logger.recordOutput("Drive/AbsCMD/betaAxis", controller.getRightX());
@@ -76,6 +77,6 @@ public class SwerveAbs extends Command {
           new ChassisSpeeds(xLimit.calculate(0), yLimit.calculate(0), rLimit.calculate(0)),
           driveConstants.maxSpeedMPS);
     }
-    Logger.recordOutput("Timers/SwerveAbsEx", (Logger.getRealTimestamp() - initial) * 0.000001);
+    Logger.recordOutput("Timers/SwerveAbsEx", (RobotController.getFPGATime() - initial) * 0.000001);
   }
 }

@@ -65,34 +65,6 @@ public final class Constants {
     public static double steerD = 0.2;
   }
 
-  public static final class shooterConstants {
-
-    public static int shootBeamID = 0;
-    public static int intakeBeamID = 1;
-    public static double shooterSpeed = 15;
-
-    public static double shootWheelDiameter = 4.0;
-
-    public static double elevatorConversion = 74 / 14 * 50;
-
-    public static double shooterP = 0;
-    public static double shooterI = 0;
-    public static double shooterD = 0;
-
-    public static double elevatorP = 0;
-    public static double elevatorI = 0;
-    public static double elevatorD = 0;
-    public static double elevatorG = 0;
-
-    public static double conveyorP = 0;
-    public static double conveyorI = 0;
-    public static double conveyorD = 0;
-    public static double conveyorFF = 0;
-
-    public static Rotation2d elevatorOffset =
-        Rotation2d.fromRadians(2.924).minus(Rotation2d.fromDegrees(180));
-    public static double shooterFF = 0.0095;
-  }
 
   public static final Mode currentMode = Mode.SIM;
 

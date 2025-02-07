@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
-import frc.robot.Constants.shooterConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -72,7 +71,6 @@ public class RobotContainer {
 
     absCmd = new SwerveAbs(swerve, controller);
 
-    shooterSpeed.set(shooterConstants.shooterSpeed);
   }
 
   private void configureBinds() {

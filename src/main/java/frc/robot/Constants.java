@@ -54,7 +54,7 @@ public final class Constants {
       new Translation2d(0.238125, 0.238125)
     };
 
-    public static final Boolean[] driveMotorInversions = {false,false,false,false};
+    public static final Boolean[] driveMotorInversions = {false,false,false,false}; // Set individual motor inversions (FrontRight, BR, BL, FL)
 
     public static double driveS = 0;
     public static double driveV = 0.01;

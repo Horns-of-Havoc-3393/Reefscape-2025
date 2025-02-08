@@ -100,7 +100,7 @@ public class SwerveMod {
     if (Math.abs(state.speedMetersPerSecond) < 0.1) {
       stop();
     } else {
-      io.setDriveSpeed(state.speedMetersPerSecond);
+      io.setDriveSpeed(state.speedMetersPerSecond * (driveConstants.driveMotorInversions[id-1] ? -1 : 1));
 
       double setpoint =
           inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();

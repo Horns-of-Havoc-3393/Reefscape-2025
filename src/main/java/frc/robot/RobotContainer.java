@@ -10,6 +10,7 @@ import com.studica.frc.AHRS;
 //import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
@@ -74,7 +75,7 @@ public class RobotContainer {
   }
 
   private void configureBinds() {
-    
+    controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
   }
 
   private void deviceFactory() {

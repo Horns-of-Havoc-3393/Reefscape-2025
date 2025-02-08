@@ -43,7 +43,7 @@ public class PosIONavX implements PosIO {
   public void updateInputs(PosIOIn inputs) {
     inputs.xGyro = Rotation2d.fromDegrees(0);
     inputs.yGyro = Rotation2d.fromDegrees(0);
-    inputs.zGyro = Rotation2d.fromDegrees(navx.getYaw());
+    inputs.zGyro = Rotation2d.fromDegrees(-navx.getYaw());
 
     inputs.xAccel = 0.0; // navx.getRawAccelX();
     inputs.yAccel = 0.0; // navx.getRawAccelY();

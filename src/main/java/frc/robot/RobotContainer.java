@@ -17,6 +17,9 @@ import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
+
+import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
+
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class RobotContainer {
@@ -76,6 +79,8 @@ public class RobotContainer {
 
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
+
+    //swerve.setDefaultCommand(absCmd);
   }
 
   private void deviceFactory() {

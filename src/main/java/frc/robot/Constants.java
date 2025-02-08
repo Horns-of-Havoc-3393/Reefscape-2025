@@ -41,10 +41,10 @@ public final class Constants {
     public static final double driveRatio = 5.903;
 
     public static final Rotation2d[] absoluteEncoderOffsets = {
-      Rotation2d.fromRadians(0.332),
-      Rotation2d.fromRadians(-0.664),
-      Rotation2d.fromRadians(1.921),
-      Rotation2d.fromRadians(-0.823)
+      Rotation2d.fromRadians(1.890),
+      Rotation2d.fromRadians(-1.213),
+      Rotation2d.fromRadians(-2.163),
+      Rotation2d.fromRadians(2.324)
     };
 
     public static final Translation2d[] offsets = {

@@ -29,7 +29,7 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 0.6;
+    public static final double maxSpeedMPS = 4.5;
     public static final double maxRotRPS = 5;
     public static final double lateralAccelLimitMPSPS = 4;
     public static final double rotationalAccelLimitRPSPS = 20;
@@ -54,13 +54,15 @@ public final class Constants {
       new Translation2d(0.238125, 0.238125)
     };
 
+    public static final Boolean[] driveMotorInversions = {false,false,false,false};
+
     public static double driveS = 0;
     public static double driveV = 0.01;
     public static double driveP = 0.03;
     public static double driveI = 0.0;
     public static double driveD = 0.0;
 
-    public static double steerP = 29;
+    public static double steerP = 13;
     public static double steerI = 0.001;
     public static double steerD = 0.2;
   }

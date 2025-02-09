@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
@@ -7,7 +9,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
-//import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,10 +18,6 @@ import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
-
-import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class RobotContainer {
 
@@ -78,9 +75,10 @@ public class RobotContainer {
   }
 
   private void configureBinds() {
-    controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
+    controller.leftStick().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
+    controller.rightStick().onTrue(new InstantCommand(() -> {swerve.updatePIDS();}, swerve));
 
-    //swerve.setDefaultCommand(absCmd);
+    swerve.setDefaultCommand(absCmd);
   }
 
   private void deviceFactory() {

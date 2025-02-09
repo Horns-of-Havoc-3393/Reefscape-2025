@@ -1,7 +1,11 @@
 package frc.robot.Subsystems.Drive;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -14,8 +18,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 public class SwerveBase extends SubsystemBase {
   PosIONavX posIO;
@@ -107,6 +109,11 @@ public class SwerveBase extends SubsystemBase {
     posIO.zero();
   }
 
+  public void updatePIDS(){
+    for (var module : modules) {
+      module.updatePIDs();
+    }
+  }
   @Override
   public void periodic() {
     Logger.recordOutput(
@@ -118,7 +125,7 @@ public class SwerveBase extends SubsystemBase {
     if (zeroGyro.get()) {
       posIO.zero();
     }
-
+    
     for (var module : modules) {
       module.periodic();
       if (update.get()) {

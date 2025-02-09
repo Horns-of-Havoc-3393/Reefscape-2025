@@ -68,16 +68,11 @@ public class SwerveAbs extends Command {
             + Math.pow(controller.getRightX(), 2))
         > driveConstants.deadZone) {
       swerve.setFO(
-          // new ChassisSpeeds(
-          //     xLimit.calculate(controller.getLeftY() * -1 * maxSpeed),
-          //     yLimit.calculate(controller.getLeftX() * -1 * maxSpeed),
-          //     rLimit.calculate(controller.getRightX() * -1 * driveConstants.maxRotRPS))
           new ChassisSpeeds(
               xLimit.calculate(controller.getLeftY() *-1* maxSpeed),
               yLimit.calculate(controller.getLeftX()  *-1* maxSpeed),
               rLimit.calculate(controller.getRightX() *1* driveConstants.maxRotRPS)),
           5);
-          //deleted comment?
     } else {
       swerve.setFO(
           new ChassisSpeeds(xLimit.calculate(0), yLimit.calculate(0), rLimit.calculate(0)),

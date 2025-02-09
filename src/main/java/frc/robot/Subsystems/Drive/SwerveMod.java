@@ -1,13 +1,15 @@
 package frc.robot.Subsystems.Drive;
 
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.driveConstants;
-import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class SwerveMod {
 
@@ -41,7 +43,7 @@ public class SwerveMod {
 
     io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
     io.setCurrentLimit(driveConstants.currentLimit);
-
+    
     driveS = new LoggedNetworkNumber("SmartDashboard/PIDs/driveS", driveConstants.driveS);
     driveS.set(driveConstants.driveS);
     driveV = new LoggedNetworkNumber("SmartDashboard/PIDs/driveV", driveConstants.driveV);

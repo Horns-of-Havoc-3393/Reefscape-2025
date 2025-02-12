@@ -13,6 +13,8 @@
 
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -29,10 +31,13 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 0.6;
-    public static final double maxRotRPS = 5;
-    public static final double lateralAccelLimitMPSPS = 4;
-    public static final double rotationalAccelLimitRPSPS = 20;
+    // Default values for these constants should be set in initLiveConstants() below
+    public static final LoggedNetworkNumber maxSpeedMPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralMaxSpeed");
+    public static final LoggedNetworkNumber maxRotRPS = new LoggedNetworkNumber("/SmartDashboard/Control/AngularMaxSpeed");
+    public static final LoggedNetworkNumber lateralAccelLimitMPSPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralAccel");
+    public static final LoggedNetworkNumber rotationalAccelLimitRPSPS = new LoggedNetworkNumber("/SmartDasboard/Control/AngularAccel");
+
+
     public static final double deadZone = 0.01;
 
     public static final double steeringRatio =
@@ -54,15 +59,35 @@ public final class Constants {
       new Translation2d(0.238125, 0.238125)
     };
 
-    public static double driveS = 0;
-    public static double driveV = 0.01;
-    public static double driveP = 0.03;
-    public static double driveI = 0.0;
-    public static double driveD = 0.0;
+    // Default values for these constants should be set in initLiveConstants() below
+    public static final LoggedNetworkNumber driveS = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveS");
+    public static final LoggedNetworkNumber driveV = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveV");
+    public static final LoggedNetworkNumber driveP = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveP");
+    public static final LoggedNetworkNumber driveI = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveI");
+    public static final LoggedNetworkNumber driveD = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveD");
 
-    public static double steerP = 29;
-    public static double steerI = 0.001;
-    public static double steerD = 0.2;
+    public static final LoggedNetworkNumber steerP = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerP");
+    public static final LoggedNetworkNumber steerI = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerI");
+    public static final LoggedNetworkNumber steerD = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerD");
+  }
+
+
+  public static void initLiveConstants() {
+    driveConstants.maxSpeedMPS.set(0.6);
+    driveConstants.maxRotRPS.set(5);
+    driveConstants.lateralAccelLimitMPSPS.set(4);
+    driveConstants.rotationalAccelLimitRPSPS.set(20);
+
+
+    driveConstants.driveS.set(0);
+    driveConstants.driveV.set(0.01);
+    driveConstants.driveP.set(0.03);
+    driveConstants.driveI.set(0.0);
+    driveConstants.driveD.set(0.0);
+
+    driveConstants.steerP.set(29);
+    driveConstants.steerI.set(0.001);
+    driveConstants.steerD.set(0.2);
   }
 
 
@@ -79,3 +104,4 @@ public final class Constants {
     REPLAY
   }
 }
+

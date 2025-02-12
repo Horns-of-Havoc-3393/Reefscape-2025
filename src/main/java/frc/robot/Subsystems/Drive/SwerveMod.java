@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.driveConstants;
 import org.littletonrobotics.junction.Logger;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 public class SwerveMod {
 
@@ -18,15 +17,6 @@ public class SwerveMod {
 
   int id;
 
-  LoggedNetworkNumber driveS;
-  LoggedNetworkNumber driveV;
-  LoggedNetworkNumber driveP;
-  LoggedNetworkNumber driveI;
-  LoggedNetworkNumber driveD;
-
-  LoggedNetworkNumber steerP;
-  LoggedNetworkNumber steerI;
-  LoggedNetworkNumber steerD;
 
   int encoderResets = 0;
 
@@ -42,23 +32,6 @@ public class SwerveMod {
     io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
     io.setCurrentLimit(driveConstants.currentLimit);
 
-    driveS = new LoggedNetworkNumber("SmartDashboard/PIDs/driveS", driveConstants.driveS);
-    driveS.set(driveConstants.driveS);
-    driveV = new LoggedNetworkNumber("SmartDashboard/PIDs/driveV", driveConstants.driveV);
-    driveV.set(driveConstants.driveV);
-    driveP = new LoggedNetworkNumber("SmartDashboard/PIDs/driveP", driveConstants.driveP);
-    driveP.set(driveConstants.driveP);
-    driveI = new LoggedNetworkNumber("SmartDashboard/PIDs/driveI", driveConstants.driveI);
-    driveI.set(driveConstants.driveI);
-    driveD = new LoggedNetworkNumber("SmartDashboard/PIDs/driveD", driveConstants.driveD);
-    driveD.set(driveConstants.driveD);
-
-    steerP = new LoggedNetworkNumber("SmartDashboard/PIDs/steerP", driveConstants.driveP);
-    steerP.set(driveConstants.steerP);
-    steerI = new LoggedNetworkNumber("SmartDashboard/PIDs/steerI", driveConstants.driveI);
-    steerI.set(driveConstants.steerI);
-    steerD = new LoggedNetworkNumber("SmartDashboard/PIDs/steerD", driveConstants.driveD);
-    steerD.set(driveConstants.steerD);
   }
 
   public void periodic() {
@@ -83,8 +56,8 @@ public class SwerveMod {
     //     driveConstants.driveI,
     //     driveConstants.driveD);
     // io.setSteerPID(driveConstants.steerP, driveConstants.driveI, driveConstants.driveD);
-    io.setDriveVelPID(driveS.get(), driveV.get(), driveP.get(), driveI.get(), driveD.get());
-    io.setSteerPID(steerP.get(), steerI.get(), steerD.get());
+    io.setDriveVelPID(driveConstants.driveS.get(), driveConstants.driveV.get(), driveConstants.driveP.get(), driveConstants.driveI.get(), driveConstants.driveD.get());
+    io.setSteerPID(driveConstants.steerP.get(), driveConstants.steerI.get(), driveConstants.steerD.get());
   }
 
   public void setSwerveState(SwerveModuleState state) {

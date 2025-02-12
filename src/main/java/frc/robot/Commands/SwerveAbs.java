@@ -18,15 +18,11 @@ public class SwerveAbs extends Command {
   CommandXboxController controller;
 
   LoggedNetworkNumber deadzone;
-  LoggedNetworkNumber lateralMaxSpeed;
-  LoggedNetworkNumber rotationalMaxSpeed;
 
   SlewRateLimiter xLimit;
   SlewRateLimiter yLimit;
   SlewRateLimiter rLimit;
 
-  LoggedNetworkNumber latAccLimit;
-  LoggedNetworkNumber rotAccLimit;
   LoggedNetworkBoolean update;
 
   public SwerveAbs(SwerveBase swerve, CommandXboxController controller) {
@@ -37,18 +33,11 @@ public class SwerveAbs extends Command {
     System.out.println("initCMD");
 
     deadzone = new LoggedNetworkNumber("/SmartDashboard/Control/deadzone");
-    lateralMaxSpeed = new LoggedNetworkNumber("/SmartDashboard/Control/lateralMaxSpeed");
-    lateralMaxSpeed.set(driveConstants.maxSpeedMPS);
-    rotationalMaxSpeed = new LoggedNetworkNumber("/SmartDashboard/Control/rotationalMaxSpeed");
-    latAccLimit = new LoggedNetworkNumber("/SmartDashboard/Control/LateralAcceleration");
-    latAccLimit.set(driveConstants.lateralAccelLimitMPSPS);
-    rotAccLimit = new LoggedNetworkNumber("/SmartDashboard/Control/RotationalAcceleration");
-    rotAccLimit.set(driveConstants.rotationalAccelLimitRPSPS);
     update = new LoggedNetworkBoolean("/SmartDashboard/update");
 
-    xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
-    yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS);
-    rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS);
+    xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
+    yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
+    rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS.get());
   }
 
   public void execute() {
@@ -57,11 +46,11 @@ public class SwerveAbs extends Command {
     Logger.recordOutput("Drive/AbsCMD/yAxis", controller.getLeftX());
     Logger.recordOutput("Drive/AbsCMD/betaAxis", controller.getRightX());
     if (update.get()) {
-      xLimit = new SlewRateLimiter(latAccLimit.get());
-      yLimit = new SlewRateLimiter(latAccLimit.get());
-      rLimit = new SlewRateLimiter(rotAccLimit.get());
+      xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
+      yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
+      rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS.get());
     }
-    double maxSpeed = lateralMaxSpeed.get();
+    double maxSpeed = driveConstants.lateralAccelLimitMPSPS.get();
     if ((Math.pow(controller.getLeftY(), 2)
             + Math.pow(controller.getLeftX(), 2)
             + Math.pow(controller.getRightX(), 2))
@@ -72,14 +61,14 @@ public class SwerveAbs extends Command {
           //     yLimit.calculate(controller.getLeftX() * -1 * maxSpeed),
           //     rLimit.calculate(controller.getRightX() * -1 * driveConstants.maxRotRPS))
           new ChassisSpeeds(
-              xLimit.calculate(controller.getLeftY() *-1* maxSpeed),
-              yLimit.calculate(controller.getLeftX()  *-1* maxSpeed),
-              rLimit.calculate(controller.getRightX() *1* driveConstants.maxRotRPS)),
+              xLimit.calculate(controller.getLeftY() * maxSpeed),
+              yLimit.calculate(controller.getLeftX() * maxSpeed),
+              rLimit.calculate(controller.getRightX() * -1 * driveConstants.maxRotRPS.get())),
           5);
     } else {
       swerve.setFO(
           new ChassisSpeeds(xLimit.calculate(0), yLimit.calculate(0), rLimit.calculate(0)),
-          driveConstants.maxSpeedMPS);
+          driveConstants.maxSpeedMPS.get());
     }
     Logger.recordOutput("Timers/SwerveAbsEx", (RobotController.getFPGATime() - initial) * 0.000001);
   }

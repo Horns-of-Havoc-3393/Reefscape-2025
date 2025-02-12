@@ -48,6 +48,7 @@ public class RobotContainer {
   public RobotContainer() {
     deviceFactory();
 
+    Constants.initLiveConstants();
     swerve =
         new SwerveBase(
             driveMotors,
@@ -63,15 +64,15 @@ public class RobotContainer {
 
     NetworkTableInstance inst = NetworkTableInstance.getDefault();
     NetworkTable pids = inst.getTable("SmartDashboard/PIDs");
-    pids.getDoubleTopic("driveS").publish().set(driveConstants.driveS);
-    pids.getDoubleTopic("driveV").publish().set(driveConstants.driveV);
-    pids.getDoubleTopic("driveP").publish().set(driveConstants.driveP);
-    pids.getDoubleTopic("driveI").publish().set(driveConstants.driveI);
-    pids.getDoubleTopic("driveD").publish().set(driveConstants.driveD);
+    pids.getDoubleTopic("driveS").publish().set(driveConstants.driveS.get());
+    pids.getDoubleTopic("driveV").publish().set(driveConstants.driveV.get());
+    pids.getDoubleTopic("driveP").publish().set(driveConstants.driveP.get());
+    pids.getDoubleTopic("driveI").publish().set(driveConstants.driveI.get());
+    pids.getDoubleTopic("driveD").publish().set(driveConstants.driveD.get());
 
-    pids.getDoubleTopic("steerP").publish().set(driveConstants.steerP);
-    pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI);
-    pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD);
+    pids.getDoubleTopic("steerP").publish().set(driveConstants.steerP.get());
+    pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI.get());
+    pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD.get());
 
     absCmd = new SwerveAbs(swerve, controller);
 

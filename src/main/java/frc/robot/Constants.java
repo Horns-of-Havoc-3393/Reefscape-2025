@@ -29,10 +29,10 @@ public final class Constants {
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
 
-    public static final double maxSpeedMPS = 0.6;
-    public static final double maxRotRPS = 5;
-    public static final double lateralAccelLimitMPSPS = 4;
-    public static final double rotationalAccelLimitRPSPS = 20;
+    public static final double maxSpeedMPS = 4.5; // Maximum speed of robot (M/s)
+    public static final double maxRotRPS = 5; // Maximum angular velocity of robot (Rot/s)
+    public static final double lateralAccelLimitMPSPS = 4; // latteral acceleration (M/s^2)
+    public static final double rotationalAccelLimitRPSPS = 20; // Angular acceleration (Rot/s^2)
     public static final double deadZone = 0.01;
 
     public static final double steeringRatio =
@@ -40,19 +40,21 @@ public final class Constants {
     public static final double wheelRadius = 1.932; // inches
     public static final double driveRatio = 5.903;
 
-    public static final Rotation2d[] absoluteEncoderOffsets = {
-      Rotation2d.fromRadians(0.332),
-      Rotation2d.fromRadians(-0.664),
-      Rotation2d.fromRadians(1.921),
-      Rotation2d.fromRadians(-0.823)
+    public static final Rotation2d[] absoluteEncoderOffsets = { // Absolute encoder offsets (do no change unless swerve modules are rebuilt, or wheels are steering all over the place
+      Rotation2d.fromRadians(1.890),   // To determine these values, SET THEM ALL TO 0, deploy the code and replace the 0s with "AdvantageKit/Drive/Module{#}/SteerPosAbsolute" for each module
+      Rotation2d.fromRadians(-1.213),          
+      Rotation2d.fromRadians(-2.163),
+      Rotation2d.fromRadians(2.324)
     };
 
-    public static final Translation2d[] offsets = {
-      new Translation2d(0.238125, -0.238125),
+    public static final Translation2d[] offsets = { // translations of each swerve module in the order: {FrontRight, BR, BL, FL}
+      new Translation2d(0.238125, -0.238125),      // When editing keep in mind that x is forward and back (+x is forward) and y is side to side (+y is *LEFT*)
       new Translation2d(-0.238125, -0.238125),
       new Translation2d(-0.238125, 0.238125),
       new Translation2d(0.238125, 0.238125)
     };
+
+    public static final Boolean[] driveMotorInversions = {false,false,false,false}; // Set individual motor inversions (FrontRight, BR, BL, FL)
 
     public static double driveS = 0;
     public static double driveV = 0.01;
@@ -60,39 +62,11 @@ public final class Constants {
     public static double driveI = 0.0;
     public static double driveD = 0.0;
 
-    public static double steerP = 29;
+    public static double steerP = 13;
     public static double steerI = 0.001;
     public static double steerD = 0.2;
   }
 
-  public static final class shooterConstants {
-
-    public static int shootBeamID = 0;
-    public static int intakeBeamID = 1;
-    public static double shooterSpeed = 15;
-
-    public static double shootWheelDiameter = 4.0;
-
-    public static double elevatorConversion = 74 / 14 * 50;
-
-    public static double shooterP = 0;
-    public static double shooterI = 0;
-    public static double shooterD = 0;
-
-    public static double elevatorP = 0;
-    public static double elevatorI = 0;
-    public static double elevatorD = 0;
-    public static double elevatorG = 0;
-
-    public static double conveyorP = 0;
-    public static double conveyorI = 0;
-    public static double conveyorD = 0;
-    public static double conveyorFF = 0;
-
-    public static Rotation2d elevatorOffset =
-        Rotation2d.fromRadians(2.924).minus(Rotation2d.fromDegrees(180));
-    public static double shooterFF = 0.0095;
-  }
 
   public static final Mode currentMode = Mode.SIM;
 

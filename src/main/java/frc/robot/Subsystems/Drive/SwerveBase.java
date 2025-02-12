@@ -30,6 +30,7 @@ public class SwerveBase extends SubsystemBase {
 
   LoggedNetworkBoolean update;
   LoggedNetworkBoolean zeroGyro;
+  LoggedNetworkBoolean publishTargetStates;
 
   private double initialTimestamp;
 
@@ -57,6 +58,7 @@ public class SwerveBase extends SubsystemBase {
 
     update = new LoggedNetworkBoolean("/SmartDashboard/update", false);
     zeroGyro = new LoggedNetworkBoolean("/SmartDashboard/Control/zeroGyro", false);
+    publishTargetStates = new LoggedNetworkBoolean("/SmartDashboard/Control/publishTargetStates", false);
 
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
@@ -92,6 +94,15 @@ public class SwerveBase extends SubsystemBase {
     return states;
   }
 
+
+  public SwerveModuleState[] getTargetStates() {
+    SwerveModuleState[] states = new SwerveModuleState[4];
+    for (int i = 0; i < 4; i++) {
+      states[i] = modules[i].getTargetState();
+    }
+    return states;
+  }
+
   public void zeroGyro() {
     posIO.zero();
   }
@@ -116,7 +127,12 @@ public class SwerveBase extends SubsystemBase {
     }
 
     SwerveModuleState[] states = getStates();
+    SwerveModuleState[] targetStates = getTargetStates();
     Logger.recordOutput("Drive/swerveState", states);
+    
+    if(targetStates[0] != null){
+      Logger.recordOutput("Drive/realTargetStates", targetStates);
+    }
     ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(states);
     xVelPub.set(measuredSpeeds.vxMetersPerSecond);
     yVelPub.set(measuredSpeeds.vyMetersPerSecond);

@@ -14,6 +14,8 @@ public class SwerveMod {
   ModIOTalon io;
   ModIOInAutoLogged inputs;
 
+  SwerveModuleState savedState;
+
   int id;
 
   LoggedNetworkNumber driveS;
@@ -94,10 +96,11 @@ public class SwerveMod {
         "Drive/Module" + id + "/optimizedSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/optimizedAngle", state.angle);
 
+    savedState = state;
     if (Math.abs(state.speedMetersPerSecond) < 0.1) {
       stop();
     } else {
-      io.setDriveSpeed(state.speedMetersPerSecond);
+      io.setDriveSpeed(state.speedMetersPerSecond * (driveConstants.driveMotorInversions[id-1] ? -1 : 1));
 
       double setpoint =
           inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
@@ -105,12 +108,19 @@ public class SwerveMod {
     }
   }
 
+  // returns the current state of the module as measured by the encoders
   public SwerveModuleState getState() {
     return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPosRelative);
+  }
+
+  // returns the target states sent to the swerve module
+  public SwerveModuleState getTargetState() {
+    return savedState;
   }
 
   public void stop() {
     io.setDriveDutyCycle(0.0);
     io.setSteerDutyCycle(0.0);
   }
+
 }

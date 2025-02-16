@@ -16,7 +16,7 @@ public class LimeLightInterface {
         return getDoubleEntry("ta");
     }
     public boolean hasValidTargets(){
-        return getDoubleEntry("tv") == 1;
+        return getDoubleEntry("tv") == 1.0;
     }
     public double getXOffset(){
         return getDoubleEntry("tx");

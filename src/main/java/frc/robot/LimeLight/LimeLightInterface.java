@@ -1,6 +1,7 @@
 package frc.robot.LimeLight;
 
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LimeLightInterface {
     private static NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");

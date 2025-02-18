@@ -4,7 +4,6 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
 //import com.kauailabs.navx.frc.AHRS;
@@ -18,7 +17,6 @@ import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
 
-import javax.xml.crypto.dsig.spec.ExcC14NParameterSpec;
 
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -27,12 +25,8 @@ public class RobotContainer {
   TalonFX[] driveMotors = new TalonFX[4];
   TalonFX[] steerMotors = new TalonFX[4];
   CANcoder[] encoders = new CANcoder[4];
-  SparkMax elevator1 = new SparkMax(20, MotorType.kBrushless);
-  SparkMax elevator2 = new SparkMax(21, MotorType.kBrushless);
-  SparkMax intake = new SparkMax(22, MotorType.kBrushless);
-  SparkFlex shooter1 = new SparkFlex(24, MotorType.kBrushless);
-  SparkFlex shooter2 = new SparkFlex(23, MotorType.kBrushless);
-  SparkFlex conveyor = new SparkFlex(25, MotorType.kBrushless);
+  SparkFlex elevator1 = new SparkFlex(20, MotorType.kBrushless);
+  SparkFlex elevator2 = new SparkFlex(21, MotorType.kBrushless);
   public SwerveBase swerve;
 
   LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("/SmartDashboard/Shooter/speed", 0.0);

@@ -2,9 +2,12 @@ package frc.robot.Subsystems;
 
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkBase.ControlType;
-import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.config.ClosedLoopConfig;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class ElevatorIOVortex implements ElevatorIO {
     SparkFlex motor1;
@@ -13,8 +16,8 @@ public class ElevatorIOVortex implements ElevatorIO {
     RelativeEncoder encoder1;
     RelativeEncoder encoder2;
 
-    SparkClosedLoopController pid1;
-    SparkClosedLoopController pid2;
+    SparkBaseConfig config;
+    ClosedLoopConfig pidConfig;
 
     double encoderOffset1;
     double encoderOffset2;
@@ -26,19 +29,17 @@ public class ElevatorIOVortex implements ElevatorIO {
         encoder1 = motor1.getEncoder();
         encoder2 = motor2.getEncoder();
 
-        pid1 = motor1.getClosedLoopController();
-        pid2 = motor2.getClosedLoopController();
 
 
         // Configure Motors ---------------------------------------------------------------
-        ClosedLoopConfig config = new ClosedLoopConfig();
-        config.pid(0,0,0);
+        ClosedLoopConfig pidConfig = new ClosedLoopConfig();
+        pidConfig.pid(0,0,0);
+        config.apply(pidConfig);
+        config.idleMode(IdleMode.kBrake);
 
+        applyConfig();
         // --------------------------------------------------------------------------------
 
-        // Set encoder offsets
-        encoderOffset1 = encoder1.getPosition();
-        encoderOffset2 = encoder2.getPosition();
     }
 
     public void updateInputs(ElevatorIOIn inputs) {
@@ -66,10 +67,44 @@ public class ElevatorIOVortex implements ElevatorIO {
         inputs.motor2Inverted = motor2.configAccessor.getInverted();
     }
 
-    // sets the position of both motors *in motor rotations* (0 is the bottom position)
-    public void setPosition(double position) {
-        pid1.setReference(position+encoderOffset1, ControlType.kPosition);
-        pid2.setReference(position+encoderOffset2, ControlType.kPosition);
+    private void applyConfig() {
+        motor1.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        motor2.configure(config, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
+    // sets the position of both motors *in motor rotations* (0 is the bottom position)
+    public void setPosition(double position) {
+        motor1.getClosedLoopController().setReference(position+encoderOffset1, ControlType.kPosition);
+        motor2.getClosedLoopController().setReference(position+encoderOffset2, ControlType.kPosition);
+    }
+
+    public void stopElevator() {
+        motor1.stopMotor();
+        motor2.stopMotor();
+    }
+
+    public void setSpeed(double speed1, double speed2) {
+        motor1.set(speed1);
+        motor2.set(speed2);
+    }
+
+    public void updatePIDs(double P, double I, double D, double FF) {
+        ClosedLoopConfig pidConfig = new ClosedLoopConfig();
+        pidConfig.pidf(P, I, D, FF);
+        applyConfig();
+    }
+
+    public void setBrake(boolean enabled) {
+        IdleMode mode = (enabled ? IdleMode.kBrake : IdleMode.kCoast);
+        config.idleMode(mode);
+        applyConfig();
+    }
+
+
+    // Shifts offsets so that the elevator's current position is reported as whatever is input to the "position" argument
+    // (calling "setCurrentPosition(0);" will zero the elevator at the current position)
+    public void setCurrentPosition(double position) {
+        encoderOffset1 = encoder1.getPosition()-position;
+        encoderOffset2 = encoder2.getPosition()-position;
+    }
 }

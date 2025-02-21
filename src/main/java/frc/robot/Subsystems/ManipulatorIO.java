@@ -1,7 +1,9 @@
 package frc.robot.Subsystems;
 
-public interface ManipulatorIO {
+import org.littletonrobotics.junction.AutoLog;
 
+public interface ManipulatorIO {
+    @AutoLog
     public static class ManipulatorIOIn {
         boolean beamBreakFwd; // True when the beam is broken at the front of the manipulator
         boolean beamBreakBack; // True when the beam is broker at the back of the manipulator
@@ -21,4 +23,6 @@ public interface ManipulatorIO {
         double rollerMotorCurrent;
         double rollerMotorBusVoltage; // Voltage on the bus
     }
+
+    public default void updateInputs() {}
 }

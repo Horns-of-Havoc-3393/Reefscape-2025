@@ -74,6 +74,13 @@ public final class Constants {
   }
 
 
+  public static final class elevatorConstants {
+    public static double wristDriveRatio = 1; // Ratio of wrist rotations to motor rotations
+    public static double rollerDriveRatio = 1; // Ratio of roller rotations to motor rotations
+    public static double rollerDiameter = 2; // Diameter of rollers
+  }
+
+
   public static void initLiveConstants() {
     driveConstants.maxSpeedMPS.set(0.6);
     driveConstants.maxRotRPS.set(5);

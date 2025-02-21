@@ -4,6 +4,7 @@ import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
 //import com.kauailabs.navx.frc.AHRS;
@@ -27,6 +28,8 @@ public class RobotContainer {
   CANcoder[] encoders = new CANcoder[4];
   SparkFlex elevator1 = new SparkFlex(20, MotorType.kBrushless);
   SparkFlex elevator2 = new SparkFlex(21, MotorType.kBrushless);
+  SparkMax wristMotor = new SparkMax(22, MotorType.kBrushless);
+  SparkMax rollerMotor = new SparkMax(23, MotorType.kBrushless);
   public SwerveBase swerve;
 
   LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("/SmartDashboard/Shooter/speed", 0.0);

@@ -78,6 +78,13 @@ public final class Constants {
     public static double wristDriveRatio = 1; // Ratio of wrist rotations to motor rotations
     public static double rollerDriveRatio = 1; // Ratio of roller rotations to motor rotations
     public static double rollerDiameter = 2; // Diameter of rollers
+
+    public static final LoggedNetworkNumber elvP = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvP");
+    public static final LoggedNetworkNumber elvI = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvI");
+    public static final LoggedNetworkNumber elvD = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvD");
+    public static final LoggedNetworkNumber elvVel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvVel");
+    public static final LoggedNetworkNumber elvAccel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvAccel");
+    public static final LoggedNetworkNumber elvJerk = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvJerk");
   }
 
 
@@ -97,6 +104,13 @@ public final class Constants {
     driveConstants.steerP.set(29);
     driveConstants.steerI.set(0.001);
     driveConstants.steerD.set(0.2);
+
+    elevatorConstants.elvP.set(0);
+    elevatorConstants.elvI.set(0);
+    elevatorConstants.elvD.set(0);
+    elevatorConstants.elvVel.set(0);
+    elevatorConstants.elvAccel.set(0);
+    elevatorConstants.elvJerk.set(0);
   }
 
 

@@ -29,7 +29,9 @@ public class ManipulatorIONEO implements ManipulatorIO {
         this.rollerMotor = rollerMotor;
 
         // Motor configs ------------------------------------------------
+        wristConfig = new SparkMaxConfig();
         wristPID = new ClosedLoopConfig();
+        rollerConfig = new SparkMaxConfig();
         rollerPID = new ClosedLoopConfig();
 
         wristPID.pidf(0,0,0,0);

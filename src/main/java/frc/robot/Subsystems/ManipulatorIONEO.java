@@ -1,11 +1,14 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.elevatorConstants;
 
 public class ManipulatorIONEO implements ManipulatorIO {
@@ -63,5 +66,17 @@ public class ManipulatorIONEO implements ManipulatorIO {
         inputs.rollerMotorDutyCycle = rollerMotor.getAppliedOutput();
         inputs.rollerMotorCurrent = rollerMotor.getOutputCurrent();
         inputs.rollerMotorBusVoltage = rollerMotor.getBusVoltage();
+    }
+
+    public void seedWristPos(double currentRealPosition) {
+        wristOffset = wristMotor.getEncoder().getPosition() - currentRealPosition;
+    }
+
+    public void setWristPos(double position, double FF) {
+        wristMotor.getClosedLoopController().setReference(position+wristOffset, ControlType.kPosition, ClosedLoopSlot.kSlot0, FF);
+    }
+
+    public void setRollerSpeed(double speed) {
+        rollerMotor.set(speed);
     }
 }

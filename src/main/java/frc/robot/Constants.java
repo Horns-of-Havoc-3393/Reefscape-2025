@@ -75,7 +75,7 @@ public final class Constants {
 
 
   public static final class elevatorConstants {
-    public static double wristDriveRatio = 1; // Ratio of wrist rotations to motor rotations
+    public static double wristDriveRatio = 0.1; // Ratio of wrist rotations to motor rotations
     public static double rollerDriveRatio = 1; // Ratio of roller rotations to motor rotations
     public static double rollerDiameter = 2; // Diameter of rollers
 

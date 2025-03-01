@@ -21,10 +21,14 @@ public class ElvManipSubsystem extends SubsystemBase{
     LoggedNetworkBoolean updatePIDs = new LoggedNetworkBoolean("SmartDashboard/Elevator/updatePIDs");
     
     LoggedNetworkNumber setpoint = new LoggedNetworkNumber("SmartDashboard/Elevator/setpoint");
+    LoggedNetworkNumber wristSetpoint = new LoggedNetworkNumber("SmartDashboard/Elevator/wristSetpoint");
+
 
     public enum setpoints {
         L1, L2, L3, L4, CORAL, STOW, DISLODGE// for algae flicking
     }
+
+    int PIDUpdates = 0;
 
     public ElvManipSubsystem(SparkMax elevator1, SparkMax elevator2, SparkMax wristMotor, SparkMax rollerMotor) {
         elvIO = new ElevatorIOVortex(elevator1, elevator2);
@@ -38,23 +42,39 @@ public class ElvManipSubsystem extends SubsystemBase{
         Logger.processInputs("Elevator", elvInputs);
         Logger.processInputs("Manipulator", manipInputs);
 
+        elvIO.setCurrentPosition(0.0);
+        manipIO.seedWristPos(0.0);
+
 
         run.set(false);
         setpoint.set(0);
+        wristSetpoint.set(0);
         updatePIDs.set(false);
+
+        elvIO.updatePIDs(elevatorConstants.elvP.get(), elevatorConstants.elvI.get(), elevatorConstants.elvD.get(), 0, elevatorConstants.elvVel.get(), elevatorConstants.elvAccel.get(), elevatorConstants.elvJerk.get());
+        manipIO.updateWristPIDs(elevatorConstants.manipP.get(), elevatorConstants.manipI.get(), elevatorConstants.manipD.get(), elevatorConstants.manipFF.get());
     }
     
     public void periodic() {
         elvIO.updateInputs(elvInputs);
+        manipIO.updateInputs(manipInputs);
         Logger.processInputs("Elevator", elvInputs);
+        Logger.processInputs("Manipulator", manipInputs);
 
-        if(updatePIDs.get()) {
+        if(PIDUpdates<10) {
+
+        }
+
+        if(updatePIDs.get() || PIDUpdates<10) {
             elvIO.updatePIDs(elevatorConstants.elvP.get(), elevatorConstants.elvI.get(), elevatorConstants.elvD.get(), 0, elevatorConstants.elvVel.get(), elevatorConstants.elvAccel.get(), elevatorConstants.elvJerk.get());
             manipIO.updateWristPIDs(elevatorConstants.manipP.get(), elevatorConstants.manipI.get(), elevatorConstants.manipD.get(), elevatorConstants.manipFF.get());
+            PIDUpdates++;
         }
-        // if(run.get()) {
-        //     elvIO.setPosition(setpoint.get());
-        // }
+        if(run.get()) {
+            System.out.println("update PIDs");
+            elvIO.setPosition(setpoint.get());
+            manipIO.setWristPos(wristSetpoint.get(),0.0);
+        }
     }
 
     // I know this function is basically useless rn but it will be expanded if we ever improve the manipulator code

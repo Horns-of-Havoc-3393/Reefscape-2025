@@ -4,21 +4,18 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
-import frc.robot.Subsystems.ElvManipSubsystem;
 import frc.robot.Subsystems.Drive.SwerveBase;
+import frc.robot.Subsystems.ElvManipSubsystem;
 import frc.robot.Subsystems.ManipulatorIONEO;
 
 public class RobotContainer {
@@ -69,7 +66,6 @@ public class RobotContainer {
 
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
-    armOperater.rightBumper().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
     //swerve.setDefaultCommand(absCmd);
   }
 

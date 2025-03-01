@@ -16,7 +16,6 @@ import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
 import frc.robot.Subsystems.ElvManipSubsystem;
-import frc.robot.Subsystems.ManipulatorIONEO;
 
 public class RobotContainer {
 

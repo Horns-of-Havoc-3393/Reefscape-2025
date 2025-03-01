@@ -86,25 +86,25 @@ public class ElvManipSubsystem extends SubsystemBase{
     public void gotoSetpoint(setpoints target) {
         switch(target) {
             case L1:
-                setState(0.0, 0.0);
+                setState(0, -15.5);
                 break;
             case L2:
-                setState(0.0,0.0);
+                setState(5.8,-18);
                 break;
             case L3:
-                setState(0.0,0.0);
+                setState(23.25,-18.5);
                 break;
             case L4:
-                setState(0.0,0.0);
+                setState(39,-17.5);
                 break;
             case CORAL:
-                setState(0.0,0.0);
+                setState(4.238,-9.738);
                 break;
             case STOW:
-                setState(0.0,0.0);
+                setState(0.0,-4.5);
                 break;
             case DISLODGE:
-                setState(0.0,0.0);
+                setState(4.0,-4.5);
                 break;
             
         }
@@ -120,5 +120,8 @@ public class ElvManipSubsystem extends SubsystemBase{
     }
     public void normal_in(){
         manipIO.setRollerSpeed(-0.75);
+    }
+    public void stopRollers(){
+        manipIO.setRollerSpeed(0);
     }
 }

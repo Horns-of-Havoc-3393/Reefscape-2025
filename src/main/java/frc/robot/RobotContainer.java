@@ -65,8 +65,10 @@ public class RobotContainer {
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
 
-    armOperater.rightBumper().whileTrue(new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
-    armOperater.leftBumper().whileTrue(new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    armOperater.rightBumper().onTrue(new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
+    armOperater.rightBumper().onFalse(new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
+    armOperater.leftBumper().onTrue(new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    armOperater.leftBumper().onFalse(new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
     armOperater.start().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
     armOperater.start().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
     armOperater.a().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L1);}, elvManSub));

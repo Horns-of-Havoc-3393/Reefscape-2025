@@ -3,6 +3,7 @@ package frc.robot.Subsystems.Drive;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.driveConstants;
@@ -84,6 +85,10 @@ public class SwerveMod {
   // returns the current state of the module as measured by the encoders
   public SwerveModuleState getState() {
     return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPosRelative);
+  }
+  public SwerveModulePosition getPosition() {
+    double distance = inputs.drivePosition * Math.PI * 2 * driveConstants.wheelRadius;
+    return new SwerveModulePosition(distance, inputs.steerPosRelative);
   }
 
   // returns the target states sent to the swerve module

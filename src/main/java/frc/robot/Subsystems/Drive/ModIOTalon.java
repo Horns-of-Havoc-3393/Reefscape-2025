@@ -26,6 +26,7 @@ public class ModIOTalon implements ModIO {
 
   StatusSignal<AngularVelocity> driveVelocity;
   StatusSignal<AngularVelocity> steerVelocity;
+  StatusSignal<Angle> drivePosition;
   StatusSignal<Current> driveCurrent;
   StatusSignal<Current> steerCurrent;
   StatusSignal<Voltage> driveVolts;
@@ -67,6 +68,7 @@ public class ModIOTalon implements ModIO {
 
     driveVelocity = drive.getVelocity();
     steerVelocity = steer.getVelocity();
+    drivePosition = drive.getPosition();
     driveCurrent = drive.getStatorCurrent();
     steerCurrent = steer.getStatorCurrent();
     driveVolts = drive.getMotorVoltage();
@@ -111,6 +113,7 @@ public class ModIOTalon implements ModIO {
             / driveConstants.driveRatio
             * (driveConstants.wheelRadius * 0.0254 * 2 * Math.PI);
     inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
+    inputs.drivePosition = drivePosition.getValueAsDouble();
     inputs.driveVolts = driveVolts.getValueAsDouble();
 
     inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();

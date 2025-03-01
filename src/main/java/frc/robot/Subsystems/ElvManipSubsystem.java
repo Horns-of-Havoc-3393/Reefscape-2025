@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.elevatorConstants;
 
 public class ElvManipSubsystem extends SubsystemBase{
+
     ElevatorIOVortex elvIO;
     ElevatorIOInAutoLogged elvInputs;
 
@@ -23,7 +24,7 @@ public class ElvManipSubsystem extends SubsystemBase{
     LoggedNetworkNumber setpoint = new LoggedNetworkNumber("SmartDashboard/Elevator/setpoint");
 
     public enum setpoints {
-        L1, L2, L3, L4, CORAL, STOW, DISLODGE
+        L1, L2, L3, L4, CORAL, STOW, DISLODGE// for algae flicking
     }
 
     public ElvManipSubsystem(SparkMax elevator1, SparkMax elevator2, SparkMax wristMotor, SparkMax rollerMotor) {
@@ -86,6 +87,19 @@ public class ElvManipSubsystem extends SubsystemBase{
             case DISLODGE:
                 setState(0.0,0.0);
                 break;
+            
         }
+    }
+    public void setRollPercentage(double percent){
+        manipIO.setRollerSpeed(percent);
+    }
+    public void Slow_in(){
+        manipIO.setRollerSpeed(-0.5);
+    }
+    public void normal_out(){
+        manipIO.setRollerSpeed(0.75);
+    }
+    public void normal_in(){
+        manipIO.setRollerSpeed(-0.75);
     }
 }

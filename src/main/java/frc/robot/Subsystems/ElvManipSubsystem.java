@@ -95,7 +95,7 @@ public class ElvManipSubsystem extends SubsystemBase{
                 setState(23.25,-18.5);
                 break;
             case L4:
-                setState(39,-17.5);
+                setState(42,-15);
                 break;
             case CORAL:
                 setState(4.238,-9.738);

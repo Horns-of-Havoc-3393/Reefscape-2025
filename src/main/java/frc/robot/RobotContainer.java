@@ -1,5 +1,7 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.spark.SparkMax;
@@ -7,7 +9,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
-//import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,9 +19,7 @@ import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.ElvManipSubsystem;
 import frc.robot.Subsystems.Drive.SwerveBase;
-
-
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+import frc.robot.Subsystems.ManipulatorIONEO;
 
 public class RobotContainer {
 
@@ -32,6 +31,7 @@ public class RobotContainer {
   SparkMax wristMotor = new SparkMax(31, MotorType.kBrushless);
   SparkMax rollerMotor = new SparkMax(32, MotorType.kBrushless);
   public SwerveBase swerve;
+  public ManipulatorIONEO manipulator;
 
   public ElvManipSubsystem elvManSub = new ElvManipSubsystem(elevator1, elevator2, wristMotor, rollerMotor);
 
@@ -40,6 +40,7 @@ public class RobotContainer {
   public SwerveAbs absCmd;
 
   private final CommandXboxController controller = new CommandXboxController(0);
+  private final CommandXboxController armOperater = new CommandXboxController(1);
 
   public autoCmd auto;
 
@@ -68,7 +69,7 @@ public class RobotContainer {
 
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
-
+    armOperater.rightBumper().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
     //swerve.setDefaultCommand(absCmd);
   }
 

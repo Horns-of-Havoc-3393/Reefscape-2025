@@ -10,9 +10,11 @@ public class autoCmd extends Command {
   public autoCmd(SwerveBase swerve) {
     this.swerve = swerve;
     this.addRequirements(this.swerve);
+
+    swerve.updatePIDs();
   }
 
   public void execute() {
-    swerve.setFO(new ChassisSpeeds(-2, 0, 0), 5);
+    swerve.setFO(new ChassisSpeeds(2, 0, 0), 5);
   }
 }

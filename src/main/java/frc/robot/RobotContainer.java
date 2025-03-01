@@ -2,7 +2,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
@@ -16,6 +16,7 @@ import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
+import frc.robot.Subsystems.ElvManipSubsystem;
 import frc.robot.Subsystems.Drive.SwerveBase;
 
 
@@ -26,11 +27,13 @@ public class RobotContainer {
   TalonFX[] driveMotors = new TalonFX[4];
   TalonFX[] steerMotors = new TalonFX[4];
   CANcoder[] encoders = new CANcoder[4];
-  SparkFlex elevator1 = new SparkFlex(20, MotorType.kBrushless);
-  SparkFlex elevator2 = new SparkFlex(21, MotorType.kBrushless);
-  SparkMax wristMotor = new SparkMax(22, MotorType.kBrushless);
-  SparkMax rollerMotor = new SparkMax(23, MotorType.kBrushless);
+  SparkMax elevator1 = new SparkMax(21, MotorType.kBrushless);
+  SparkMax elevator2 = new SparkMax(22, MotorType.kBrushless);
+  // SparkMax wristMotor = new SparkMax(22, MotorType.kBrushless);
+  // SparkMax rollerMotor = new SparkMax(23, MotorType.kBrushless);
   public SwerveBase swerve;
+
+  public ElvManipSubsystem elvManSub = new ElvManipSubsystem(elevator1, elevator2);
 
   LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("/SmartDashboard/Shooter/speed", 0.0);
 
@@ -58,18 +61,6 @@ public class RobotContainer {
     configureBinds();
 
     // auto = new autoCmd(swerve);
-
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable pids = inst.getTable("SmartDashboard/PIDs");
-    pids.getDoubleTopic("driveS").publish().set(driveConstants.driveS.get());
-    pids.getDoubleTopic("driveV").publish().set(driveConstants.driveV.get());
-    pids.getDoubleTopic("driveP").publish().set(driveConstants.driveP.get());
-    pids.getDoubleTopic("driveI").publish().set(driveConstants.driveI.get());
-    pids.getDoubleTopic("driveD").publish().set(driveConstants.driveD.get());
-
-    pids.getDoubleTopic("steerP").publish().set(driveConstants.steerP.get());
-    pids.getDoubleTopic("steerI").publish().set(driveConstants.steerI.get());
-    pids.getDoubleTopic("steerD").publish().set(driveConstants.steerD.get());
 
     absCmd = new SwerveAbs(swerve, controller);
 

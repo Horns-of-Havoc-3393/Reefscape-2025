@@ -6,6 +6,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoublePublisher;
@@ -13,6 +14,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
 import org.littletonrobotics.junction.Logger;
@@ -32,6 +34,8 @@ public class SwerveBase extends SubsystemBase {
   LoggedNetworkBoolean update;
   LoggedNetworkBoolean zeroGyro;
   LoggedNetworkBoolean publishTargetStates;
+
+  SwerveDriveOdometry odometry;
 
   private double initialTimestamp;
 
@@ -68,6 +72,11 @@ public class SwerveBase extends SubsystemBase {
     for (int i = 0; i < 4; i++) {
       modules[i].updatePIDs();
     }
+
+    odometry = new SwerveDriveOdometry(
+      new SwerveDriveKinematics(driveConstants.offsets),
+      inputs.zGyro,
+      getPositions());
   }
 
   public void setFO(ChassisSpeeds speeds, double lateralMaxSpeed) {
@@ -144,6 +153,10 @@ public class SwerveBase extends SubsystemBase {
     ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(states);
     xVelPub.set(measuredSpeeds.vxMetersPerSecond);
     yVelPub.set(measuredSpeeds.vyMetersPerSecond);
+
+
+    odometry.update(inputs.zGyro, getPositions());
+
 
     Logger.recordOutput("Kalman/xVelocity", measuredSpeeds.vxMetersPerSecond);
     Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);

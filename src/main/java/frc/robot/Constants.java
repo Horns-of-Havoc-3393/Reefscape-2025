@@ -33,9 +33,13 @@ public final class Constants {
 
     // Default values for these constants should be set in initLiveConstants() below
     public static final LoggedNetworkNumber maxSpeedMPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralMaxSpeed");
+    public static final double kmaxSpeedMPS = 4.0;
     public static final LoggedNetworkNumber maxRotRPS = new LoggedNetworkNumber("/SmartDashboard/Control/AngularMaxSpeed");
+    public static final double kmaxRotRPS = 5.0;
     public static final LoggedNetworkNumber lateralAccelLimitMPSPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralAccel");
-    public static final LoggedNetworkNumber rotationalAccelLimitRPSPS = new LoggedNetworkNumber("/SmartDasboard/Control/AngularAccel");
+    public static final double klateralAccelLimitMPSPS = 4.0;
+    public static final LoggedNetworkNumber rotationalAccelLimitRPSPS = new LoggedNetworkNumber("/SmartDashboard/Control/AngularAccel");
+    public static final double krotationalAccelLimitRPSPS = 20.0;
 
 
     public static final double deadZone = 0.01;
@@ -63,14 +67,22 @@ public final class Constants {
 
     // Default values for these constants should be set in initLiveConstants() below
     public static final LoggedNetworkNumber driveS = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveS");
+    public static final double kdriveS = 0.0;
     public static final LoggedNetworkNumber driveV = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveV");
+    public static final double kdriveV = 0.01;
     public static final LoggedNetworkNumber driveP = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveP");
+    public static final double kdriveP = 0.03;
     public static final LoggedNetworkNumber driveI = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveI");
+    public static final double kdriveI = 0.0;
     public static final LoggedNetworkNumber driveD = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveD");
+    public static final double kdriveD = 0.0;
 
     public static final LoggedNetworkNumber steerP = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerP");
+    public static final double ksteerP = 29;
     public static final LoggedNetworkNumber steerI = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerI");
+    public static final double ksteerI = 0.001;
     public static final LoggedNetworkNumber steerD = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerD");
+    public static final double ksteerD = 0.2;
   }
 
 
@@ -80,47 +92,57 @@ public final class Constants {
     public static double rollerDiameter = 2; // Diameter of rollers
 
     public static final LoggedNetworkNumber elvP = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvP");
+    public static final double kelvP = 0.1;
     public static final LoggedNetworkNumber elvI = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvI");
+    public static final double kelvI = 0.0;
     public static final LoggedNetworkNumber elvD = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvD");
+    public static final double kelvD = 0.0;
     public static final LoggedNetworkNumber elvVel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvVel");
+    public static final double kelvVel = 0.0;
     public static final LoggedNetworkNumber elvAccel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvAccel");
+    public static final double kelvAccel = 0.0;
     public static final LoggedNetworkNumber elvJerk = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvJerk");
+    public static final double kelvJerk = 0.0;
 
     public static final LoggedNetworkNumber manipP = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipP");
+    public static final double kmanipP = 0.06;
     public static final LoggedNetworkNumber manipI = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipI");
+    public static final double kmanipI = 0.0;
     public static final LoggedNetworkNumber manipD = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipD");
+    public static final double kmanipD = 0.0;
     public static final LoggedNetworkNumber manipFF = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipFF");
+    public static final double kmanipFF = 0.0;
   }
 
 
   public static void initLiveConstants() {
-    driveConstants.maxSpeedMPS.set(0.6);
-    driveConstants.maxRotRPS.set(5);
-    driveConstants.lateralAccelLimitMPSPS.set(4);
-    driveConstants.rotationalAccelLimitRPSPS.set(20);
+    driveConstants.maxSpeedMPS.set(driveConstants.kmaxSpeedMPS);
+    driveConstants.maxRotRPS.set(driveConstants.kmaxRotRPS);
+    driveConstants.lateralAccelLimitMPSPS.set(driveConstants.klateralAccelLimitMPSPS);
+    driveConstants.rotationalAccelLimitRPSPS.set(driveConstants.krotationalAccelLimitRPSPS);
 
 
-    driveConstants.driveS.set(0);
-    driveConstants.driveV.set(0.01);
-    driveConstants.driveP.set(0.03);
-    driveConstants.driveI.set(0.0);
-    driveConstants.driveD.set(0.0);
+    driveConstants.driveS.set(driveConstants.kdriveS);
+    driveConstants.driveV.set(driveConstants.kdriveV);
+    driveConstants.driveP.set(driveConstants.kdriveP);
+    driveConstants.driveI.set(driveConstants.kdriveI);
+    driveConstants.driveD.set(driveConstants.kdriveD);
 
-    driveConstants.steerP.set(29);
-    driveConstants.steerI.set(0.001);
-    driveConstants.steerD.set(0.2);
+    driveConstants.steerP.set(driveConstants.ksteerP);
+    driveConstants.steerI.set(driveConstants.ksteerI);
+    driveConstants.steerD.set(driveConstants.ksteerD);
 
-    elevatorConstants.elvP.set(0.1);
-    elevatorConstants.elvI.set(0);
-    elevatorConstants.elvD.set(0);
-    elevatorConstants.elvVel.set(0);
-    elevatorConstants.elvAccel.set(0);
-    elevatorConstants.elvJerk.set(0);
+    elevatorConstants.elvP.set(elevatorConstants.kelvP);
+    elevatorConstants.elvI.set(elevatorConstants.kelvI);
+    elevatorConstants.elvD.set(elevatorConstants.kelvD);
+    elevatorConstants.elvVel.set(elevatorConstants.kelvVel);
+    elevatorConstants.elvAccel.set(elevatorConstants.kelvAccel);
+    elevatorConstants.elvJerk.set(elevatorConstants.kelvJerk);
 
-    elevatorConstants.manipP.set(0.06);
-    elevatorConstants.manipI.set(0);
-    elevatorConstants.manipD.set(0);
-    elevatorConstants.manipFF.set(0);
+    elevatorConstants.manipP.set(elevatorConstants.kmanipP);
+    elevatorConstants.manipI.set(elevatorConstants.kmanipI);
+    elevatorConstants.manipD.set(elevatorConstants.kmanipD);
+    elevatorConstants.manipFF.set(elevatorConstants.kmanipFF);
 
   }
 

@@ -35,9 +35,11 @@ public class SwerveAbs extends Command {
     deadzone = new LoggedNetworkNumber("/SmartDashboard/Control/deadzone");
     update = new LoggedNetworkBoolean("/SmartDashboard/update");
 
-    xLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
-    yLimit = new SlewRateLimiter(driveConstants.lateralAccelLimitMPSPS.get());
-    rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS.get());
+    xLimit = new SlewRateLimiter(driveConstants.klateralAccelLimitMPSPS);
+    yLimit = new SlewRateLimiter(driveConstants.klateralAccelLimitMPSPS);
+    rLimit = new SlewRateLimiter(driveConstants.krotationalAccelLimitRPSPS);
+
+    swerve.updatePIDs();
   }
 
   public void execute() {

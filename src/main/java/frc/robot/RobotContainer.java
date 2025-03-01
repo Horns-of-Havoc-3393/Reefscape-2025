@@ -24,10 +24,9 @@ public class RobotContainer {
   CANcoder[] encoders = new CANcoder[4];
   SparkMax elevator1 = new SparkMax(21, MotorType.kBrushless);
   SparkMax elevator2 = new SparkMax(22, MotorType.kBrushless);
-  SparkMax wristMotor = new SparkMax(31, MotorType.kBrushless);
-  SparkMax rollerMotor = new SparkMax(32, MotorType.kBrushless);
+  SparkMax wristMotor = new SparkMax(24, MotorType.kBrushless);
+  SparkMax rollerMotor = new SparkMax(25, MotorType.kBrushless);
   public SwerveBase swerve;
-  public ElvManipSubsystem manipulator;
 
   public ElvManipSubsystem elvManSub = new ElvManipSubsystem(elevator1, elevator2, wristMotor, rollerMotor);
 
@@ -66,15 +65,15 @@ public class RobotContainer {
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
 
-    armOperater.rightBumper().whileTrue(new InstantCommand(() -> {manipulator.normal_out();}, manipulator));
-    armOperater.leftBumper().whileTrue(new InstantCommand(() -> {manipulator.normal_in();}, manipulator));
-    armOperater.start().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, manipulator));
-    armOperater.start().onFalse(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, manipulator));
-    armOperater.a().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.L1);}, manipulator));
-    armOperater.x().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.L2);}, manipulator));
-    armOperater.y().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.L3);}, manipulator));
-    armOperater.b().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}, manipulator));
-    armOperater.back().onTrue(new InstantCommand(() -> {manipulator.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGE);}, manipulator));
+    armOperater.rightBumper().whileTrue(new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
+    armOperater.leftBumper().whileTrue(new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    armOperater.start().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
+    armOperater.start().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
+    armOperater.a().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L1);}, elvManSub));
+    armOperater.x().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L2);}, elvManSub));
+    armOperater.y().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L3);}, elvManSub));
+    armOperater.b().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}, elvManSub));
+    armOperater.back().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGE);}, elvManSub));
 
     //swerve.setDefaultCommand(absCmd);
   }

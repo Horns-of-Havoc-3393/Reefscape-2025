@@ -110,14 +110,14 @@ public final class Constants {
     driveConstants.steerI.set(0.001);
     driveConstants.steerD.set(0.2);
 
-    elevatorConstants.elvP.set(0);
+    elevatorConstants.elvP.set(0.1);
     elevatorConstants.elvI.set(0);
     elevatorConstants.elvD.set(0);
     elevatorConstants.elvVel.set(0);
     elevatorConstants.elvAccel.set(0);
     elevatorConstants.elvJerk.set(0);
 
-    elevatorConstants.manipP.set(0);
+    elevatorConstants.manipP.set(0.06);
     elevatorConstants.manipI.set(0);
     elevatorConstants.manipD.set(0);
     elevatorConstants.manipFF.set(0);

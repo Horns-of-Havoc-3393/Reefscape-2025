@@ -37,6 +37,8 @@ public class SwerveBase extends SubsystemBase {
 
   SwerveDriveOdometry odometry;
 
+  int PIDUpdates = 0;
+
   private double initialTimestamp;
 
   public SwerveBase(
@@ -124,6 +126,12 @@ public class SwerveBase extends SubsystemBase {
     posIO.zero();
   }
 
+  public void updatePIDs() {
+    for (int i=0; i<4; i++) {
+      modules[i].updatePIDs();
+    }
+  }
+
   @Override
   public void periodic() {
     Logger.recordOutput(
@@ -138,8 +146,10 @@ public class SwerveBase extends SubsystemBase {
 
     for (var module : modules) {
       module.periodic();
-      if (update.get()) {
+      if (update.get() || PIDUpdates < 10) {
+        System.out.println("Update base pids");
         module.updatePIDs();
+        PIDUpdates++;
       }
     }
 

@@ -25,6 +25,8 @@ public class SwerveAbs extends Command {
 
   LoggedNetworkBoolean update;
 
+  int PIDUpdates = 0;
+
   public SwerveAbs(SwerveBase swerve, CommandXboxController controller) {
     this.controller = controller;
     this.swerve = swerve;
@@ -44,6 +46,12 @@ public class SwerveAbs extends Command {
 
   public void execute() {
     double initial = RobotController.getFPGATime();
+
+    if (PIDUpdates < 10) {
+      swerve.updatePIDs();
+      PIDUpdates++;
+    }
+
     Logger.recordOutput("Drive/AbsCMD/xAxis", controller.getLeftY());
     Logger.recordOutput("Drive/AbsCMD/yAxis", controller.getLeftX());
     Logger.recordOutput("Drive/AbsCMD/betaAxis", controller.getRightX());

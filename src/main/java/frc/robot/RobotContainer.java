@@ -29,11 +29,11 @@ public class RobotContainer {
   CANcoder[] encoders = new CANcoder[4];
   SparkMax elevator1 = new SparkMax(21, MotorType.kBrushless);
   SparkMax elevator2 = new SparkMax(22, MotorType.kBrushless);
-  // SparkMax wristMotor = new SparkMax(22, MotorType.kBrushless);
-  // SparkMax rollerMotor = new SparkMax(23, MotorType.kBrushless);
+  SparkMax wristMotor = new SparkMax(31, MotorType.kBrushless);
+  SparkMax rollerMotor = new SparkMax(32, MotorType.kBrushless);
   public SwerveBase swerve;
 
-  public ElvManipSubsystem elvManSub = new ElvManipSubsystem(elevator1, elevator2);
+  public ElvManipSubsystem elvManSub = new ElvManipSubsystem(elevator1, elevator2, wristMotor, rollerMotor);
 
   LoggedNetworkNumber shooterSpeed = new LoggedNetworkNumber("/SmartDashboard/Shooter/speed", 0.0);
 

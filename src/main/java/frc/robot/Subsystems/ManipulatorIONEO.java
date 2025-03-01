@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import frc.robot.Constants.elevatorConstants;
 
 public class ManipulatorIONEO implements ManipulatorIO {
@@ -78,5 +77,11 @@ public class ManipulatorIONEO implements ManipulatorIO {
 
     public void setRollerSpeed(double speed) {
         rollerMotor.set(speed);
+    }
+
+    public void updateWristPIDs(double P, double I, double D, double FF) {
+        wristPID.pidf(P, I, D, FF);
+        wristConfig.apply(wristPID);
+        applyConfigs();
     }
 }

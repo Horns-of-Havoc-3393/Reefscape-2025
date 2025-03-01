@@ -50,10 +50,11 @@ public class ElvManipSubsystem extends SubsystemBase{
 
         if(updatePIDs.get()) {
             elvIO.updatePIDs(elevatorConstants.elvP.get(), elevatorConstants.elvI.get(), elevatorConstants.elvD.get(), 0, elevatorConstants.elvVel.get(), elevatorConstants.elvAccel.get(), elevatorConstants.elvJerk.get());
+            manipIO.updateWristPIDs(elevatorConstants.manipP.get(), elevatorConstants.manipI.get(), elevatorConstants.manipD.get(), elevatorConstants.manipFF.get());
         }
-        if(run.get()) {
-            elvIO.setPosition(setpoint.get());
-        }
+        // if(run.get()) {
+        //     elvIO.setPosition(setpoint.get());
+        // }
     }
 
     // I know this function is basically useless rn but it will be expanded if we ever improve the manipulator code

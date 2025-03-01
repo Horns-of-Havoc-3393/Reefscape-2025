@@ -85,6 +85,11 @@ public final class Constants {
     public static final LoggedNetworkNumber elvVel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvVel");
     public static final LoggedNetworkNumber elvAccel = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvAccel");
     public static final LoggedNetworkNumber elvJerk = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvJerk");
+
+    public static final LoggedNetworkNumber manipP = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipP");
+    public static final LoggedNetworkNumber manipI = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipI");
+    public static final LoggedNetworkNumber manipD = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipD");
+    public static final LoggedNetworkNumber manipFF = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipFF");
   }
 
 
@@ -111,6 +116,12 @@ public final class Constants {
     elevatorConstants.elvVel.set(0);
     elevatorConstants.elvAccel.set(0);
     elevatorConstants.elvJerk.set(0);
+
+    elevatorConstants.manipP.set(0);
+    elevatorConstants.manipI.set(0);
+    elevatorConstants.manipD.set(0);
+    elevatorConstants.manipFF.set(0);
+
   }
 
 

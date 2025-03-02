@@ -6,6 +6,7 @@
   },
   "MainWindow": {
     "GLOBAL": {
+      "font": "Proggy Dotted",
       "fps": "120",
       "height": "1920",
       "maximized": "0",
@@ -14,6 +15,19 @@
       "width": "2560",
       "xpos": "-1",
       "ypos": "-1"
+    }
+  },
+  "Table": {
+    "0x965B9C9E,2": {
+      "Column 0  Width": "310",
+      "Column 1  Weight": "1.0000",
+      "RefScale": "31"
+    },
+    "0xE56EC1C2,4": {
+      "Column 0  Weight": "1.0000",
+      "Column 1  Weight": "1.0000",
+      "Column 2  Weight": "1.0000",
+      "Column 3  Weight": "1.0000"
     }
   },
   "Window": {
@@ -30,7 +44,7 @@
     "###NetworkTables Settings": {
       "Collapsed": "0",
       "Pos": "75,75",
-      "Size": "756,295"
+      "Size": "800,295"
     },
     "Debug##Default": {
       "Collapsed": "0",

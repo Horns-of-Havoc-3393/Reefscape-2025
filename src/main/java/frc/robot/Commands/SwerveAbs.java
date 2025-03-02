@@ -61,6 +61,9 @@ public class SwerveAbs extends Command {
       rLimit = new SlewRateLimiter(driveConstants.rotationalAccelLimitRPSPS.get());
     }
     double maxSpeed = driveConstants.lateralAccelLimitMPSPS.get();
+    if (controller.leftBumper().getAsBoolean()) {
+      maxSpeed = maxSpeed/3;  
+    }
     if ((Math.pow(controller.getLeftY(), 2)
             + Math.pow(controller.getLeftX(), 2)
             + Math.pow(controller.getRightX(), 2))
@@ -73,7 +76,7 @@ public class SwerveAbs extends Command {
               rLimit.calculate(controller.getRightX() * driveConstants.maxRotRPS.get()));
 
 
-      swerve.setFO(speeds,5);
+      swerve.setFO(speeds,maxSpeed);
       Logger.recordOutput("Drive/AbsCMD/ChassisSpeeds", speeds);
 
     } else {

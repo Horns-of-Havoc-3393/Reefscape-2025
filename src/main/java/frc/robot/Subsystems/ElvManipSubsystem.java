@@ -23,6 +23,10 @@ public class ElvManipSubsystem extends SubsystemBase{
     LoggedNetworkNumber setpoint = new LoggedNetworkNumber("SmartDashboard/Elevator/setpoint");
     LoggedNetworkNumber wristSetpoint = new LoggedNetworkNumber("SmartDashboard/Elevator/wristSetpoint");
 
+    double wristTarget = 0;
+    double elvTarget = 0;
+    double elvAdjustment = 0;
+
 
     public enum setpoints {
         L1, L2, L3, L4, CORAL, STOW, DISLODGE// for algae flicking
@@ -61,6 +65,9 @@ public class ElvManipSubsystem extends SubsystemBase{
         Logger.processInputs("Elevator", elvInputs);
         Logger.processInputs("Manipulator", manipInputs);
 
+        elvIO.setPosition(elvTarget + elvAdjustment);
+        manipIO.setWristPos(wristTarget,0);
+
         if(PIDUpdates<10) {
 
         }
@@ -79,8 +86,14 @@ public class ElvManipSubsystem extends SubsystemBase{
 
     // I know this function is basically useless rn but it will be expanded if we ever improve the manipulator code
     private void setState(double height, double wristPos) {
-        elvIO.setPosition(height);
-        manipIO.setWristPos(wristPos, 0);
+        elvTarget = height;
+        wristTarget = wristPos;
+        // elvIO.setPosition(height);
+        // manipIO.setWristPos(wristPos, 0);
+    }
+
+    public void adjustHeight(double adjustment) {
+        elvAdjustment = adjustment;
     }
 
     public void gotoSetpoint(setpoints target) {
@@ -89,19 +102,21 @@ public class ElvManipSubsystem extends SubsystemBase{
                 setState(0, -15.5);
                 break;
             case L2:
-                setState(5.8,-18);
+                setState(7.8,-18);
                 break;
             case L3:
-                setState(23.25,-18.5);
+                setState(22.25,-17);
                 break;
             case L4:
-                setState(42,-15);
+                setState(42,-19);
                 break;
             case CORAL:
                 setState(4.238,-9.738);
+                normal_out();
                 break;
             case STOW:
                 setState(0.0,-4.5);
+                stopRollers();
                 break;
             case DISLODGE:
                 setState(4.0,-4.5);

@@ -105,7 +105,7 @@ public final class Constants {
     public static final double kelvJerk = 0.0;
 
     public static final LoggedNetworkNumber manipP = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipP");
-    public static final double kmanipP = 0.06;
+    public static final double kmanipP = 0.08;
     public static final LoggedNetworkNumber manipI = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipI");
     public static final double kmanipI = 0.0;
     public static final LoggedNetworkNumber manipD = new LoggedNetworkNumber("/SmartDashboard/PIDs/manipD");

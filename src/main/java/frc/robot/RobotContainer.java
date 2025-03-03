@@ -79,7 +79,10 @@ public class RobotContainer {
     armOperater.x().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L2);}, elvManSub));
     armOperater.y().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L3);}, elvManSub));
     armOperater.b().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}, elvManSub));
-    armOperater.back().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGE);}, elvManSub));
+    armOperater.povUp().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGEH);}, elvManSub));
+    armOperater.povUp().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
+    armOperater.povDown().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGEL);}, elvManSub));
+    armOperater.povDown().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
 
     armOperater.axisMagnitudeGreaterThan(1,0.05).whileTrue(new RunCommand(() -> {elvManSub.adjustHeight(armOperater.getRawAxis(1) * -2);}, elvManSub));
 

@@ -29,7 +29,7 @@ public class ElvManipSubsystem extends SubsystemBase{
 
 
     public enum setpoints {
-        L1, L2, L3, L4, CORAL, STOW, DISLODGE// for algae flicking
+        L1, L2, L3, L4, CORAL, STOW, DISLODGEL, DISLODGEH// for algae flicking
     }
 
     int PIDUpdates = 0;
@@ -108,7 +108,7 @@ public class ElvManipSubsystem extends SubsystemBase{
                 setState(22.25,-17);
                 break;
             case L4:
-                setState(42,-19);
+                setState(42,-16);
                 break;
             case CORAL:
                 setState(4.238,-9.738);
@@ -118,10 +118,14 @@ public class ElvManipSubsystem extends SubsystemBase{
                 setState(0.0,-4.5);
                 stopRollers();
                 break;
-            case DISLODGE:
-                setState(4.0,-4.5);
+            case DISLODGEL:
+                setState(4.0,-20);
+                normal_in();
                 break;
-            
+            case DISLODGEH:
+                setState(17.7, -20);
+                normal_in();
+                break;
         }
     }
     public void setRollPercentage(double percent){

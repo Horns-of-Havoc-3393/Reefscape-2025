@@ -109,17 +109,18 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     robotContainer.swerve.zeroGyro();
+    chooser.get().schedule();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    robotContainer.swerve.setDefaultCommand(chooser.get());
   }
 
   /** This function is called once when teleop is enabled. */
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   /** This function is called periodically during operator control. */
   @Override

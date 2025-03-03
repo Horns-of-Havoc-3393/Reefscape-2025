@@ -10,8 +10,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoublePublisher;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.driveConstants;
@@ -45,40 +43,49 @@ public class SwerveBase extends SubsystemBase {
       CANcoder[] encoders,
       Translation2d[] positions,
       Rotation2d[] absEncoderOffsets,
-      PosIONavX posIO) {
+      PosIONavX posIO)
+    {
     SwerveDriveKinematics kinematics = new SwerveDriveKinematics(positions);
     this.kinematics = kinematics;
 
+    // instantiate swerve mod classes
     for (int i = 0; i < 4; i++) {
       modules[i] = new SwerveMod(driveMotors[i], steerMotors[i], encoders[i], absEncoderOffsets[i]);
     }
 
+
+
     this.posIO = posIO;
     inputs = new PosIOInAutoLogged();
 
-    NetworkTableInstance inst = NetworkTableInstance.getDefault();
-    NetworkTable table = inst.getTable("Kalman");
-    xVelPub = table.getDoubleTopic("xVelocity").publish();
-    yVelPub = table.getDoubleTopic("yVelocity").publish();
 
+    // debug telemetry stuff
     update = new LoggedNetworkBoolean("/SmartDashboard/update", false);
     zeroGyro = new LoggedNetworkBoolean("/SmartDashboard/Control/zeroGyro", false);
     publishTargetStates = new LoggedNetworkBoolean("/SmartDashboard/Control/publishTargetStates", false);
 
+
+
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
 
+
+    // Zero gyro and set PIDs of each module
     posIO.zero();
     for (int i = 0; i < 4; i++) {
       modules[i].updatePIDs();
     }
 
+
+    // init odometry
     odometry = new SwerveDriveOdometry(
       new SwerveDriveKinematics(driveConstants.offsets),
       inputs.zGyro,
       getPositions());
   }
 
+
+  // Set Field Oriented: moves the robot according to the field-oriented "speeds" ChassisSpeeds object
   public void setFO(ChassisSpeeds speeds, double lateralMaxSpeed) {
     double initial = RobotController.getFPGATime();
 
@@ -96,6 +103,8 @@ public class SwerveBase extends SubsystemBase {
     Logger.recordOutput("Timers/SwerveBaseSetFO", (RobotController.getFPGATime() - initial) * 0.000001);
   }
 
+
+  // Get the current state of each swerve module
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -103,6 +112,9 @@ public class SwerveBase extends SubsystemBase {
     }
     return states;
   }
+
+
+  // Get the current position of each swerve module (uses distance traveled by drive motor rather than current velocity)
   public SwerveModulePosition[] getPositions() {
     SwerveModulePosition[] positions = new SwerveModulePosition[4];
     for (int i = 0; i < 4; i++) {
@@ -112,6 +124,7 @@ public class SwerveBase extends SubsystemBase {
   }
 
 
+  // Get the current target states for each module (for logging/debug purposes)
   public SwerveModuleState[] getTargetStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (int i = 0; i < 4; i++) {
@@ -120,6 +133,8 @@ public class SwerveBase extends SubsystemBase {
     return states;
   }
 
+
+  // zero the gryo
   public void zeroGyro() {
     posIO.zero();
   }
@@ -129,9 +144,14 @@ public class SwerveBase extends SubsystemBase {
     Logger.recordOutput(
         "Timers/SwerveBasePdFreq", 1 / ((RobotController.getFPGATime() - initialTimestamp) * 0.000001));
     initialTimestamp = RobotController.getFPGATime();
+
+
+
     posIO.updateInputs(inputs);
     Logger.processInputs("Positioning", inputs);
 
+
+    // debug stuff
     if (zeroGyro.get()) {
       posIO.zero();
     }
@@ -143,6 +163,9 @@ public class SwerveBase extends SubsystemBase {
       }
     }
 
+
+
+    // logging/debug
     SwerveModuleState[] states = getStates();
     SwerveModuleState[] targetStates = getTargetStates();
     Logger.recordOutput("Drive/swerveState", states);
@@ -155,6 +178,8 @@ public class SwerveBase extends SubsystemBase {
     yVelPub.set(measuredSpeeds.vyMetersPerSecond);
 
 
+
+    // step odometry
     odometry.update(inputs.zGyro, getPositions());
 
 

@@ -2,6 +2,8 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -87,8 +89,8 @@ public class SwerveBase extends SubsystemBase {
   }
 
 
-  // Set Field Oriented: moves the robot according to the field-oriented "speeds" ChassisSpeeds object
-  public void setFO(ChassisSpeeds speeds, double lateralMaxSpeed) {
+  // Moves the robot according to the field-oriented "speeds" ChassisSpeeds object
+  public void setFieldOrientedSpeeds(ChassisSpeeds speeds, double lateralMaxSpeed) {
     double initial = RobotController.getFPGATime();
 
     SwerveModuleState[] states =
@@ -103,6 +105,18 @@ public class SwerveBase extends SubsystemBase {
       modules[i].setSwerveState(states[i]);
     }
     Logger.recordOutput("Timers/SwerveBaseSetFO", (RobotController.getFPGATime() - initial) * 0.000001);
+  }
+
+
+  // Set drive speeds relative to the robot
+  public void setRelativeSpeeds(ChassisSpeeds speeds) {
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
+
+    Logger.recordOutput("Drive/targetStates", states);
+
+    for (int i=0; i<4; i++) {
+      modules[i].setSwerveState(states[i]);
+    }
   }
 
 
@@ -133,6 +147,26 @@ public class SwerveBase extends SubsystemBase {
       states[i] = modules[i].getTargetState();
     }
     return states;
+  }
+
+
+  // returns current chassis speeds of the robot
+  public ChassisSpeeds getChassisSpeeds() {
+    return kinematics.toChassisSpeeds(getStates());
+  }
+
+
+
+  // returns current odometry pose of the robot
+  public Pose2d getPose() {
+    return odometry.getPoseMeters();
+  }
+
+
+
+  // set the current odometry pose
+  public void setPose(Pose2d newPose) {
+    odometry.resetPose(newPose);
   }
 
 

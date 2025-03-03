@@ -76,11 +76,11 @@ public class SwerveAbs extends Command {
               rLimit.calculate(controller.getRightX() * driveConstants.maxRotRPS.get()));
 
 
-      swerve.setFO(speeds,maxSpeed);
+      swerve.setFieldOrientedSpeeds(speeds,maxSpeed);
       Logger.recordOutput("Drive/AbsCMD/ChassisSpeeds", speeds);
 
     } else {
-      swerve.setFO(
+      swerve.setFieldOrientedSpeeds(
           new ChassisSpeeds(xLimit.calculate(0), yLimit.calculate(0), rLimit.calculate(0)),
           driveConstants.maxSpeedMPS.get());
     }

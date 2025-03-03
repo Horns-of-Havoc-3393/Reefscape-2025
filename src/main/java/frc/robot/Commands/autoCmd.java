@@ -27,7 +27,7 @@ public class autoCmd extends Command {
 
   @Override
   public void execute() {
-    swerve.setFO(new ChassisSpeeds(2, 0, 0), 5);
+    swerve.setFieldOrientedSpeeds(new ChassisSpeeds(2, 0, 0), 5);
   }
 
   @Override
@@ -37,6 +37,6 @@ public class autoCmd extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    swerve.setFO(new ChassisSpeeds(0,0,0), 5);
+    swerve.setFieldOrientedSpeeds(new ChassisSpeeds(0,0,0), 5);
   }
 }

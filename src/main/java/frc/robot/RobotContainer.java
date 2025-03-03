@@ -9,9 +9,11 @@ import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Commands.SwerveAbs;
 import frc.robot.Commands.autoCmd;
+import frc.robot.Commands.elevatorAdjust;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIONavX;
 import frc.robot.Subsystems.Drive.SwerveBase;
@@ -38,6 +40,7 @@ public class RobotContainer {
   private final CommandXboxController armOperater = new CommandXboxController(1);
 
   public autoCmd auto;
+  public elevatorAdjust elvAdjustCmd;
 
   long spinUp;
 
@@ -53,6 +56,7 @@ public class RobotContainer {
             driveConstants.offsets,
             driveConstants.absoluteEncoderOffsets,
             new PosIONavX(new AHRS(AHRS.NavXComType.kMXP_SPI)));
+
 
     configureBinds();
 
@@ -75,8 +79,15 @@ public class RobotContainer {
     armOperater.x().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L2);}, elvManSub));
     armOperater.y().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L3);}, elvManSub));
     armOperater.b().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}, elvManSub));
-    armOperater.back().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGE);}, elvManSub));
+    armOperater.povUp().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGEH);}, elvManSub));
+    armOperater.povUp().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
+    armOperater.povDown().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.DISLODGEL);}, elvManSub));
+    armOperater.povDown().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
 
+    armOperater.axisMagnitudeGreaterThan(1,0.05).whileTrue(new RunCommand(() -> {elvManSub.adjustHeight(armOperater.getRawAxis(1) * -2);}, elvManSub));
+
+    //elvAdjustCmd = new elevatorAdjust(elvManSub, armOperater);
+    //elvAdjustCmd.schedule();
     //swerve.setDefaultCommand(absCmd);
   }
 

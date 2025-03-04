@@ -243,18 +243,11 @@ public class SwerveBase extends SubsystemBase {
     if(targetStates[0] != null){
       Logger.recordOutput("Drive/realTargetStates", targetStates);
     }
-    ChassisSpeeds measuredSpeeds = kinematics.toChassisSpeeds(states);
-    xVelPub.set(measuredSpeeds.vxMetersPerSecond);
-    yVelPub.set(measuredSpeeds.vyMetersPerSecond);
-
 
 
     // step odometry
     odometry.update(inputs.zGyro, getPositions());
 
-
-    Logger.recordOutput("Kalman/xVelocity", measuredSpeeds.vxMetersPerSecond);
-    Logger.recordOutput("Kalman/yVelocity", measuredSpeeds.vyMetersPerSecond);
 
     Logger.recordOutput("ChassisAngle", inputs.zGyro);
     Logger.recordOutput(

@@ -13,9 +13,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Commands.autoCmd;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -26,6 +26,8 @@ import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -34,8 +36,9 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
  */
 public class Robot extends LoggedRobot {
 
-  private final LoggedDashboardChooser<Command> chooser =
-      new LoggedDashboardChooser<>("Auto Choices");
+  // private final LoggedDashboardChooser<Command> chooser =
+  //     new LoggedDashboardChooser<>("Auto Choices");
+  private LoggedDashboardChooser<Command> chooser;
   
 
   private RobotContainer robotContainer;
@@ -96,7 +99,10 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
 
 
-    chooser.addDefaultOption("mobility", new autoCmd(robotContainer.swerve));
+    chooser = new LoggedDashboardChooser<>("auto", AutoBuilder.buildAutoChooser());
+    //chooser.addDefaultOption("mobility", new autoCmd(robotContainer.swerve));
+
+    SmartDashboard.putData(CommandScheduler.getInstance());
   }
 
   /** This function is called periodically during all modes. */

@@ -15,6 +15,8 @@ package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
@@ -27,6 +29,35 @@ import edu.wpi.first.math.geometry.Translation2d;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static final class autonConstants {
+
+    public static final RobotConfig pathPlannerConfig = getPathPlannerConfig();
+
+    private static RobotConfig getPathPlannerConfig() {
+      try {
+        return RobotConfig.fromGUISettings();
+      } catch(Exception e) {
+        e.printStackTrace();
+        return null;
+      }
+    }
+
+    public static final LoggedNetworkNumber transP = new LoggedNetworkNumber("/SmartDashboard/Auton/transP");
+    public static final double ktransP = 0.0;
+    public static final LoggedNetworkNumber transI = new LoggedNetworkNumber("/SmartDashboard/Auton/transI");
+    public static final double ktransI = 0.0;
+    public static final LoggedNetworkNumber transD = new LoggedNetworkNumber("/SmartDashboard/Auton/transD");
+    public static final double ktransD = 0.0;
+
+    public static final LoggedNetworkNumber rotP = new LoggedNetworkNumber("/SmartDashboard/Auton/rotP");
+    public static final double krotP = 0.0;
+    public static final LoggedNetworkNumber rotI = new LoggedNetworkNumber("/SmartDashboard/Auton/rotI");
+    public static final double krotI = 0.0;
+    public static final LoggedNetworkNumber rotD = new LoggedNetworkNumber("/SmartDashboard/Auton/rotD");
+    public static final double krotD = 0.0;
+
+  }
 
   public static final class driveConstants {
     public static final double currentLimit = 40; // Decrease when browning out
@@ -144,6 +175,13 @@ public final class Constants {
     elevatorConstants.manipD.set(elevatorConstants.kmanipD);
     elevatorConstants.manipFF.set(elevatorConstants.kmanipFF);
 
+    autonConstants.transP.set(autonConstants.ktransP);
+    autonConstants.transI.set(autonConstants.ktransI);
+    autonConstants.transD.set(autonConstants.ktransD);
+
+    autonConstants.rotP.set(autonConstants.krotP);
+    autonConstants.rotI.set(autonConstants.krotI);
+    autonConstants.rotD.set(autonConstants.krotD);
   }
 
 

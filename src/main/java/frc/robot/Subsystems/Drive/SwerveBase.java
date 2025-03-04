@@ -2,6 +2,9 @@ package frc.robot.Subsystems.Drive;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -12,8 +15,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoublePublisher;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.autonConstants;
 import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
@@ -86,6 +91,27 @@ public class SwerveBase extends SubsystemBase {
       new SwerveDriveKinematics(driveConstants.offsets),
       inputs.zGyro,
       getPositions());
+
+
+    // AutoBuilder init
+    AutoBuilder.configure(
+      this::getPose,
+      this::setPose,
+      this::getChassisSpeeds,
+      (speeds, feedforwards) -> setRelativeSpeeds(speeds), 
+      new PPHolonomicDriveController(
+        new PIDConstants(autonConstants.ktransP,autonConstants.ktransI,autonConstants.ktransD),
+        new PIDConstants(autonConstants.krotP,autonConstants.krotI,autonConstants.krotD)
+      ),
+      autonConstants.pathPlannerConfig,
+      () -> {
+        var alliance = DriverStation.getAlliance();
+        if (alliance.isPresent()) {
+          return alliance.get() == DriverStation.Alliance.Red;
+        }
+        return false;
+      },
+      this);
   }
 
 

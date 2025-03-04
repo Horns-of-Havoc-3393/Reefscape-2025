@@ -6,20 +6,21 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.autonConstants;
-import frc.robot.Constants.driveConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
 import org.littletonrobotics.junction.Logger;
@@ -40,7 +41,7 @@ public class SwerveBase extends SubsystemBase {
   LoggedNetworkBoolean zeroGyro;
   LoggedNetworkBoolean publishTargetStates;
 
-  SwerveDriveOdometry odometry;
+  SwerveDrivePoseEstimator estimator;
 
   int PIDUpdates = 0;
 
@@ -86,12 +87,14 @@ public class SwerveBase extends SubsystemBase {
     }
 
 
-    // init odometry
-    odometry = new SwerveDriveOdometry(
-      new SwerveDriveKinematics(driveConstants.offsets),
+    // init estimator
+    estimator = new SwerveDrivePoseEstimator(
+      this.kinematics,
       inputs.zGyro,
-      getPositions());
-
+      getPositions(),
+      new Pose2d(0,0,inputs.zGyro),
+      VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
+      VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
     // AutoBuilder init
     AutoBuilder.configure(
@@ -183,16 +186,16 @@ public class SwerveBase extends SubsystemBase {
 
 
 
-  // returns current odometry pose of the robot
+  // returns current estimator pose of the robot
   public Pose2d getPose() {
-    return odometry.getPoseMeters();
+    return estimator.getEstimatedPosition();
   }
 
 
 
-  // set the current odometry pose
+  // set the current estimator pose
   public void setPose(Pose2d newPose) {
-    odometry.resetPose(newPose);
+    estimator.resetPose(newPose);
   }
 
 
@@ -245,8 +248,8 @@ public class SwerveBase extends SubsystemBase {
     }
 
 
-    // step odometry
-    odometry.update(inputs.zGyro, getPositions());
+    // step estimator
+    estimator.update(inputs.zGyro, getPositions());
 
 
     Logger.recordOutput("ChassisAngle", inputs.zGyro);

@@ -92,9 +92,9 @@ public class SwerveBase extends SubsystemBase {
     // init estimator
     estimator = new SwerveDrivePoseEstimator(
       this.kinematics,
-      inputs.zGyro,
+      inputs.zAngle,
       getPositions(),
-      new Pose2d(0,0,inputs.zGyro),
+      new Pose2d(0,0,inputs.zAngle),
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
       VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
@@ -126,7 +126,7 @@ public class SwerveBase extends SubsystemBase {
 
     SwerveModuleState[] states =
         kinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zGyro));
+            ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zAngle));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(states, lateralMaxSpeed);
 
@@ -251,13 +251,13 @@ public class SwerveBase extends SubsystemBase {
 
 
     // step estimator
-    estimator.update(inputs.zGyro, getPositions());
+    estimator.update(inputs.zAngle, getPositions());
     LimelightHelpers.SetRobotOrientation("limelight", estimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
 
 
-    Logger.recordOutput("ChassisAngle", inputs.zGyro);
+    Logger.recordOutput("ChassisAngle", inputs.zAngle);
     Logger.recordOutput(
         "Timers/SwerveBasePd", (RobotController.getFPGATime() - initialTimestamp) * 0.000001);
   }

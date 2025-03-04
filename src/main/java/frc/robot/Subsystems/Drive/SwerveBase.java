@@ -20,6 +20,8 @@ import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.Constants.autonConstants;
 import frc.robot.Positioning.PosIOInAutoLogged;
 import frc.robot.Positioning.PosIONavX;
@@ -250,6 +252,9 @@ public class SwerveBase extends SubsystemBase {
 
     // step estimator
     estimator.update(inputs.zGyro, getPositions());
+    LimelightHelpers.SetRobotOrientation("limelight", estimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
 
 
     Logger.recordOutput("ChassisAngle", inputs.zGyro);

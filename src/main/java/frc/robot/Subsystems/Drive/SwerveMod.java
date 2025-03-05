@@ -5,6 +5,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotController;
 import frc.robot.Constants.driveConstants;
 import org.littletonrobotics.junction.Logger;
@@ -87,7 +88,7 @@ public class SwerveMod {
     return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPosRelative);
   }
   public SwerveModulePosition getPosition() {
-    double distance = inputs.drivePosition * Math.PI * 2 * driveConstants.wheelRadius;
+    double distance = inputs.drivePosition * Math.PI * 2 * Units.inchesToMeters(driveConstants.wheelRadius) / 5.903;
     return new SwerveModulePosition(distance, inputs.steerPosRelative);
   }
 

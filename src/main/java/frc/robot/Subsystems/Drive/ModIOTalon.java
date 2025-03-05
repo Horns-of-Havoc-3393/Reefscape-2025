@@ -103,6 +103,7 @@ public class ModIOTalon implements ModIO {
         steerVolts,
         steerPosRelative,
         steerPosAbsolute,
+        drivePosition,
         driveVelErr,
         steerPosErr,
         driveDutyCycle);

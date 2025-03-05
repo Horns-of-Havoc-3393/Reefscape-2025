@@ -141,8 +141,9 @@ public class SwerveBase extends SubsystemBase {
 
   // Set drive speeds relative to the robot
   public void setRelativeSpeeds(ChassisSpeeds speeds) {
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(180)));
 
+    Logger.recordOutput("Drive/relativeTargetSpeeds", speeds);
     Logger.recordOutput("Drive/targetStates", states);
 
     for (int i=0; i<4; i++) {
@@ -254,7 +255,9 @@ public class SwerveBase extends SubsystemBase {
     estimator.update(inputs.zAngle, getPositions());
     LimelightHelpers.SetRobotOrientation("limelight", estimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
+    if (visionEst != null) {
+      estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
+    }
 
 
     Logger.recordOutput("ChassisAngle", inputs.zAngle);

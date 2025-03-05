@@ -99,7 +99,7 @@ public class Robot extends LoggedRobot {
     robotContainer = new RobotContainer();
 
 
-    chooser = new LoggedDashboardChooser<>("auto", AutoBuilder.buildAutoChooser());
+    chooser = new LoggedDashboardChooser<>("Auton/Auto Chooser", AutoBuilder.buildAutoChooser());
     //chooser.addDefaultOption("mobility", new autoCmd(robotContainer.swerve));
 
     SmartDashboard.putData(CommandScheduler.getInstance());

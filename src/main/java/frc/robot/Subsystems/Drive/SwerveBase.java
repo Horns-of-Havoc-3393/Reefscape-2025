@@ -42,6 +42,7 @@ public class SwerveBase extends SubsystemBase {
   LoggedNetworkBoolean update;
   LoggedNetworkBoolean zeroGyro;
   LoggedNetworkBoolean publishTargetStates;
+  LoggedNetworkBoolean updateFollowerPIDs;
 
   SwerveDrivePoseEstimator estimator;
 
@@ -56,7 +57,7 @@ public class SwerveBase extends SubsystemBase {
       Translation2d[] positions,
       Rotation2d[] absEncoderOffsets,
       PosIONavX posIO)
-    {
+  {
     SwerveDriveKinematics kinematics = new SwerveDriveKinematics(positions);
     this.kinematics = kinematics;
 
@@ -75,6 +76,7 @@ public class SwerveBase extends SubsystemBase {
     update = new LoggedNetworkBoolean("/SmartDashboard/update", false);
     zeroGyro = new LoggedNetworkBoolean("/SmartDashboard/Control/zeroGyro", false);
     publishTargetStates = new LoggedNetworkBoolean("/SmartDashboard/Control/publishTargetStates", false);
+    updateFollowerPIDs = new LoggedNetworkBoolean("/SmartDashboard/Auton/updateFollowPIDs", false);
 
 
 
@@ -98,16 +100,26 @@ public class SwerveBase extends SubsystemBase {
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
       VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
+
+    PIDConstants translationPIDs;
+    PIDConstants rotationPIDs;
+    if (updateFollowerPIDs.get()) {
+      translationPIDs = new PIDConstants(autonConstants.transP.get(),autonConstants.transI.get(),autonConstants.transD.get());
+      rotationPIDs =  new PIDConstants(autonConstants.rotP.get(),autonConstants.rotI.get(),autonConstants.rotD.get());
+    } else {
+      translationPIDs = new PIDConstants(autonConstants.ktransP,autonConstants.ktransI,autonConstants.ktransD);
+      rotationPIDs = new PIDConstants(autonConstants.krotP,autonConstants.krotI,autonConstants.krotD);
+    }
+
+
+
     // AutoBuilder init
     AutoBuilder.configure(
       this::getPose,
       this::setPose,
       this::getChassisSpeeds,
       (speeds, feedforwards) -> setRelativeSpeeds(speeds), 
-      new PPHolonomicDriveController(
-        new PIDConstants(autonConstants.ktransP,autonConstants.ktransI,autonConstants.ktransD),
-        new PIDConstants(autonConstants.krotP,autonConstants.krotI,autonConstants.krotD)
-      ),
+      new PPHolonomicDriveController(translationPIDs, rotationPIDs),
       autonConstants.pathPlannerConfig,
       () -> {
         var alliance = DriverStation.getAlliance();
@@ -117,7 +129,8 @@ public class SwerveBase extends SubsystemBase {
         return false;
       },
       this);
-  }
+    }
+  
 
 
   // Moves the robot according to the field-oriented "speeds" ChassisSpeeds object
@@ -231,6 +244,7 @@ public class SwerveBase extends SubsystemBase {
     if (zeroGyro.get()) {
       posIO.zero();
     }
+
 
     for (var module : modules) {
       module.periodic();

@@ -101,6 +101,7 @@ public class SwerveBase extends SubsystemBase {
       VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
 
+    // Change how the path-follow PID constants are set depending on network boolean
     PIDConstants translationPIDs;
     PIDConstants rotationPIDs;
     if (updateFollowerPIDs.get()) {
@@ -110,7 +111,6 @@ public class SwerveBase extends SubsystemBase {
       translationPIDs = new PIDConstants(autonConstants.ktransP,autonConstants.ktransI,autonConstants.ktransD);
       rotationPIDs = new PIDConstants(autonConstants.krotP,autonConstants.krotI,autonConstants.krotD);
     }
-
 
 
     // AutoBuilder init
@@ -154,7 +154,7 @@ public class SwerveBase extends SubsystemBase {
 
   // Set drive speeds relative to the robot
   public void setRelativeSpeeds(ChassisSpeeds speeds) {
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(180)));
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(180))); // For some reason I have to rotate this 180 degrees (I don't know why)
 
     Logger.recordOutput("Drive/relativeTargetSpeeds", speeds);
     Logger.recordOutput("Drive/targetStates", states);

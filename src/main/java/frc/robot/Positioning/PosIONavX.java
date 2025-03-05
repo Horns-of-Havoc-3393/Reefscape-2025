@@ -29,10 +29,13 @@ public class PosIONavX implements PosIO {
   @Override
   public void updateInputs(PosIOIn inputs) {
     inputs.xAngle = Rotation2d.fromDegrees(navx.getRoll());
+    inputs.xAngleDegrees = inputs.xAngle.getDegrees();
     inputs.xAngularVelocity = Rotation2d.fromDegrees(navx.getRawGyroX());
     inputs.yAngle = Rotation2d.fromDegrees(navx.getPitch());
+    inputs.yAngleDegrees = inputs.yAngle.getDegrees();
     inputs.yAngularVelocity = Rotation2d.fromDegrees(navx.getRawGyroY());
     inputs.zAngle = Rotation2d.fromDegrees(-navx.getYaw());
+    inputs.zAngleDegrees = inputs.zAngle.getDegrees();
     inputs.zAngularVelocity = Rotation2d.fromDegrees(-navx.getRawGyroZ());
 
     inputs.xAccel = navx.getRawAccelX();

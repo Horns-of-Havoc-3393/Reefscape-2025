@@ -271,8 +271,8 @@ public class SwerveBase extends SubsystemBase {
     estimator.update(inputs.zAngle, getPositions());
     LimelightHelpers.SetRobotOrientation("limelight", estimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    Logger.recordOutput("Auto/VisionEstimate1", visionEst.pose);
     if (visionEst != null) {
+      Logger.recordOutput("Auto/VisionEstimate1", visionEst.pose);
       estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
     }
 

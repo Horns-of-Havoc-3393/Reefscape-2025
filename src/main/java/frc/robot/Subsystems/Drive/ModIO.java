@@ -16,10 +16,10 @@ public interface ModIO {
     double steerVelocityRPS;
     double steerCurrentAmps;
     double steerVolts;
-    Rotation2d steerPosRelative;
-    Rotation2d steerPosRelativePre;
-    Rotation2d steerPosAbsolute;
-    double steerPosRaw;
+    Rotation2d relEncoderCalculatedAngle;
+    double relEncoderRaw;
+    Rotation2d absEncoderCalculatedAngle;
+    double steerPosDegrees;
     double steerPosErr;
     double currentLimit;
     Rotation2d targetAngle;

@@ -31,7 +31,7 @@ public class SwerveMod {
     io.updateInputs(inputs);
     Logger.processInputs("Drive/Module" + drive.getDeviceID(), inputs);
 
-    io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
+    io.setEncoderOffset(Rotation2d.fromRotations(inputs.relEncoderRaw).minus(inputs.absEncoderCalculatedAngle));
     io.setCurrentLimit(driveConstants.currentLimit);
 
   }
@@ -42,10 +42,10 @@ public class SwerveMod {
     // io.setSteerPID(steerP.get(), steerI.get(), steerD.get());
     io.updateInputs(inputs);
 
-    if (encoderResets < 10) {
-      io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
-      encoderResets++;
-    }
+    // if (encoderResets < 10) {
+    //   io.setEncoderOffset((inputs.steerPosRelativePre.minus(inputs.steerPosAbsolute)));
+    //   encoderResets++;
+    // }
     Logger.processInputs("Drive/Module" + id, inputs);
     Logger.recordOutput("Timers/SwerveModPd", (RobotController.getFPGATime() - initial) * 0.000001);
   }
@@ -66,7 +66,7 @@ public class SwerveMod {
     Logger.recordOutput("Drive/Module" + id + "/targetSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/targetAngle", state.angle);
     
-    state.optimize(inputs.steerPosRelative);
+    state.optimize(inputs.relEncoderCalculatedAngle);
     Logger.recordOutput(
         "Drive/Module" + id + "/optimizedSpeed", state.speedMetersPerSecond);
     Logger.recordOutput("Drive/Module" + id + "/optimizedAngle", state.angle);
@@ -77,19 +77,19 @@ public class SwerveMod {
     } else {
       io.setDriveSpeed(state.speedMetersPerSecond * (driveConstants.driveMotorInversions[id-1] ? -1 : 1));
 
-      double setpoint =
-          inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
-      io.setSteerPos(setpoint);
+      // double setpoint =
+      //     inputs.steerPosRaw + state.angle.minus(inputs.steerPosRelative).getRotations();
+      io.setSteerPos(state.angle);
     }
   }
 
   // returns the current state of the module as measured by the encoders
   public SwerveModuleState getState() {
-    return new SwerveModuleState(inputs.driveVelocityMPS, inputs.steerPosRelative);
+    return new SwerveModuleState(inputs.driveVelocityMPS, inputs.relEncoderCalculatedAngle);
   }
   public SwerveModulePosition getPosition() {
     double distance = inputs.drivePosition * Math.PI * 2 * Units.inchesToMeters(driveConstants.wheelRadius) / 5.903;
-    return new SwerveModulePosition(distance, inputs.steerPosRelative);
+    return new SwerveModulePosition(distance, inputs.relEncoderCalculatedAngle);
   }
 
   // returns the target states sent to the swerve module

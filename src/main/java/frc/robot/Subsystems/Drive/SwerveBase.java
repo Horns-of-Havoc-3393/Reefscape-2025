@@ -137,9 +137,13 @@ public class SwerveBase extends SubsystemBase {
   public void setFieldOrientedSpeeds(ChassisSpeeds speeds, double lateralMaxSpeed) {
     double initial = RobotController.getFPGATime();
 
-    SwerveModuleState[] states =
-        kinematics.toSwerveModuleStates(
-            ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zAngle));
+    Logger.recordOutput("Drive/fieldOrientedSpeeds", speeds);
+
+    ChassisSpeeds relativeSpeeds;
+    relativeSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(speeds, inputs.zAngle);
+
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(relativeSpeeds);
+    Logger.recordOutput("Drive/relativeTargetSpeeds", relativeSpeeds);
 
     SwerveDriveKinematics.desaturateWheelSpeeds(states, lateralMaxSpeed);
 
@@ -269,7 +273,7 @@ public class SwerveBase extends SubsystemBase {
 
     // step estimator
     estimator.update(inputs.zAngle, getPositions());
-    LimelightHelpers.SetRobotOrientation("limelight", estimator.getEstimatedPosition().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    LimelightHelpers.SetRobotOrientation("limelight", this.getPose().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
     if (visionEst != null) {
       Logger.recordOutput("Auto/VisionEstimate1", visionEst.pose);

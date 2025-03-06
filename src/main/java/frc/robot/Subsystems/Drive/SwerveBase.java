@@ -19,6 +19,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.PoseEstimate;
@@ -46,6 +48,8 @@ public class SwerveBase extends SubsystemBase {
 
   SwerveDrivePoseEstimator estimator;
 
+  public Field2d Field;
+
   int PIDUpdates = 0;
 
   private double initialTimestamp;
@@ -66,6 +70,8 @@ public class SwerveBase extends SubsystemBase {
       modules[i] = new SwerveMod(driveMotors[i], steerMotors[i], encoders[i], absEncoderOffsets[i]);
     }
 
+
+    this.Field = new Field2d();
 
 
     this.posIO = posIO;
@@ -279,6 +285,10 @@ public class SwerveBase extends SubsystemBase {
       Logger.recordOutput("Auto/VisionEstimate1", visionEst.pose);
       estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
     }
+
+
+    Field.setRobotPose(estimator.getEstimatedPosition());
+    SmartDashboard.putData("Field", Field);
 
 
     Logger.recordOutput("ChassisAngle", inputs.zAngle);

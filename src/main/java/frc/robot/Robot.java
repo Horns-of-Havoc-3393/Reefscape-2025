@@ -13,9 +13,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+
+import java.util.Optional;
 
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -27,6 +31,8 @@ import org.littletonrobotics.junction.wpilog.WPILOGReader;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -140,7 +146,24 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically when disabled. */
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    Optional<Pose2d> startingPose = Optional.empty();
+    try {
+      PathPlannerPath path = PathPlannerAuto.getPathGroupFromAutoFile(chooser.get().getName()).get(0);
+      if (getFlipPath()) {
+        startingPose = path.flipPath().getStartingHolonomicPose();
+      }else{
+        startingPose = path.getStartingHolonomicPose();
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    if(startingPose.isPresent()) {
+      robotContainer.swerve.Field.getObject("startingPos").setPose(startingPose.get());
+      // robotContainer.Field.setRobotPose(startingPose.get());
+    }
+
+  }
 
   /** This function is called once when test mode is enabled. */
   @Override
@@ -157,4 +180,12 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically whilst in simulation. */
   @Override
   public void simulationPeriodic() {}
+
+  private boolean getFlipPath() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return alliance.get() == DriverStation.Alliance.Red;
+    }
+    return false;
+  }
 }

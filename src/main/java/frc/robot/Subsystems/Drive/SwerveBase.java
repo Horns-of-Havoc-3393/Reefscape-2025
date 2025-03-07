@@ -164,7 +164,7 @@ public class SwerveBase extends SubsystemBase {
 
   // Set drive speeds relative to the robot
   public void setRelativeSpeeds(ChassisSpeeds speeds) {
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(speeds, Rotation2d.fromDegrees(180))); // For some reason I have to rotate this 180 degrees (I don't know why)
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(speeds);
 
     Logger.recordOutput("Drive/relativeTargetSpeeds", speeds);
     Logger.recordOutput("Drive/targetStates", states);

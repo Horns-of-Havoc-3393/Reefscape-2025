@@ -44,14 +44,14 @@ public final class Constants {
     }
 
     public static final LoggedNetworkNumber transP = new LoggedNetworkNumber("/SmartDashboard/Auton/transP");
-    public static final double ktransP = 0.0;
+    public static final double ktransP = 1;
     public static final LoggedNetworkNumber transI = new LoggedNetworkNumber("/SmartDashboard/Auton/transI");
     public static final double ktransI = 0.0;
     public static final LoggedNetworkNumber transD = new LoggedNetworkNumber("/SmartDashboard/Auton/transD");
     public static final double ktransD = 0.0;
 
     public static final LoggedNetworkNumber rotP = new LoggedNetworkNumber("/SmartDashboard/Auton/rotP");
-    public static final double krotP = 0.0;
+    public static final double krotP = 0.1;
     public static final LoggedNetworkNumber rotI = new LoggedNetworkNumber("/SmartDashboard/Auton/rotI");
     public static final double krotI = 0.0;
     public static final LoggedNetworkNumber rotD = new LoggedNetworkNumber("/SmartDashboard/Auton/rotD");
@@ -109,7 +109,7 @@ public final class Constants {
     public static final double kdriveD = 0.0;
 
     public static final LoggedNetworkNumber steerP = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerP");
-    public static final double ksteerP = 29;
+    public static final double ksteerP = 13;
     public static final LoggedNetworkNumber steerI = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerI");
     public static final double ksteerI = 0.001;
     public static final LoggedNetworkNumber steerD = new LoggedNetworkNumber("/SmartDashboard/PIDs/steerD");

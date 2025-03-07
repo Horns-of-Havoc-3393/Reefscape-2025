@@ -178,7 +178,12 @@ public class Robot extends LoggedRobot {
       Trajectory autoTrajectory = new Trajectory();
 
       while(paths.hasNext()) {
-        PathPlannerPath path = paths.next();
+        PathPlannerPath path;
+        if(getFlipPath()) {
+          path = paths.next().flipPath();
+        } else {
+          path = paths.next();
+        }
 
         List<Pose2d> poses = path.getPathPoses();
 

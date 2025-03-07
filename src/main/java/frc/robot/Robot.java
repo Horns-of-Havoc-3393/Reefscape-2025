@@ -14,11 +14,16 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 
 import org.littletonrobotics.junction.LogFileUtil;
@@ -48,6 +53,8 @@ public class Robot extends LoggedRobot {
   
 
   private RobotContainer robotContainer;
+
+  private String autoName = "None"; 
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -147,21 +154,54 @@ public class Robot extends LoggedRobot {
   /** This function is called periodically when disabled. */
   @Override
   public void disabledPeriodic() {
-    Optional<Pose2d> startingPose = Optional.empty();
-    try {
-      PathPlannerPath path = PathPlannerAuto.getPathGroupFromAutoFile(chooser.get().getName()).get(0);
-      if (getFlipPath()) {
-        startingPose = path.flipPath().getStartingHolonomicPose();
-      }else{
-        startingPose = path.getStartingHolonomicPose();
+
+    if(!chooser.get().getName().equals(autoName) && !(chooser.get().getName().equals("InstantCommand"))) {
+      System.out.println("Updating auto starting position for auto: " + chooser.get().getName());
+
+      Optional<Pose2d> startingPose = Optional.empty();
+
+
+
+      Iterator<PathPlannerPath> paths = null;
+      PathPlannerPath startingPath = null;
+      try {
+        paths = PathPlannerAuto.getPathGroupFromAutoFile(chooser.get().getName()).iterator();
+        startingPath = PathPlannerAuto.getPathGroupFromAutoFile(chooser.get().getName()).get(0);
+      } catch (Exception e) {
+        e.printStackTrace();
       }
-    } catch (Exception e) {
-      e.printStackTrace();
+
+      // Iterate through each path and add its points to the autoPoints list
+
+      if(paths == null) {return;}
+
+      Trajectory autoTrajectory = new Trajectory();
+
+      while(paths.hasNext()) {
+        PathPlannerPath path = paths.next();
+
+        List<Pose2d> poses = path.getPathPoses();
+
+        autoTrajectory = autoTrajectory.concatenate(TrajectoryGenerator.generateTrajectory(poses, new TrajectoryConfig(5.0,5.0)));
+      }
+
+
+
+      if (getFlipPath()) {
+        startingPose = startingPath.flipPath().getStartingHolonomicPose();
+      }else{
+        startingPose = startingPath.getStartingHolonomicPose();
+      }
+      if(startingPose.isPresent()) {
+        robotContainer.swerve.Field.getObject("startingPos").setPose(startingPose.get());
+        robotContainer.swerve.Field.getObject("autoTrajectory").setTrajectory(autoTrajectory);
+        // robotContainer.Field.setRobotPose(startingPose.get());
+      }
+
+      autoName = chooser.get().getName();
+
     }
-    if(startingPose.isPresent()) {
-      robotContainer.swerve.Field.getObject("startingPos").setPose(startingPose.get());
-      // robotContainer.Field.setRobotPose(startingPose.get());
-    }
+
 
   }
 

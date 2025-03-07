@@ -73,7 +73,7 @@ public class SwerveAbs extends Command {
           new ChassisSpeeds(
               xLimit.calculate(controller.getLeftY() * maxSpeed),
               yLimit.calculate(controller.getLeftX() * maxSpeed),
-              rLimit.calculate(controller.getRightX() * driveConstants.maxRotRPS.get()));
+              rLimit.calculate(controller.getRightX() * -1 *driveConstants.maxRotRPS.get()));
 
 
       swerve.setFieldOrientedSpeeds(speeds,maxSpeed);

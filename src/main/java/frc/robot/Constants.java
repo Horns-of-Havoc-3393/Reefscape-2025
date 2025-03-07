@@ -94,7 +94,7 @@ public final class Constants {
       new Translation2d(0.238125, 0.238125)
     };
 
-    public static final Boolean[] driveMotorInversions = {false,false,false,false}; // Set individual motor inversions (FrontRight, BR, BL, FL)
+    public static final Boolean[] driveMotorInversions = {true,true,true,true}; // Set individual motor inversions (FrontRight, BR, BL, FL)
 
     // Default values for these constants should be set in initLiveConstants() below
     public static final LoggedNetworkNumber driveS = new LoggedNetworkNumber("/SmartDashboard/PIDs/driveS");
@@ -185,7 +185,7 @@ public final class Constants {
   }
 
 
-  public static final Mode currentMode = Mode.REAL;
+  public static final Mode currentMode = Mode.SIM;
 
   public static enum Mode {
     /** Running on a real robot. */

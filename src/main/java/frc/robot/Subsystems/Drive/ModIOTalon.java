@@ -110,13 +110,13 @@ public class ModIOTalon implements ModIO {
         steerPosErr,
         driveDutyCycle);
 
-    inputs.driveVelocityRPS = driveVelocity.getValueAsDouble();
+    inputs.driveVelocityRPS = driveVelocity.getValueAsDouble() * -1;
     inputs.driveVelocityMPS =
-        driveVelocity.getValueAsDouble()
+        driveVelocity.getValueAsDouble() * -1
             / driveConstants.driveRatio
             * (driveConstants.wheelRadius * 0.0254 * 2 * Math.PI);
     inputs.driveCurrentAmps = driveCurrent.getValueAsDouble();
-    inputs.drivePosition = drivePosition.getValueAsDouble();
+    inputs.drivePosition = drivePosition.getValueAsDouble() * -1;
     inputs.driveVolts = driveVolts.getValueAsDouble();
 
     inputs.steerVelocityRPS = steerVelocity.getValueAsDouble();

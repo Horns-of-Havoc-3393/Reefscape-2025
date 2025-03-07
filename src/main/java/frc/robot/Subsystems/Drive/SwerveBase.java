@@ -207,7 +207,9 @@ public class SwerveBase extends SubsystemBase {
 
   // returns current chassis speeds of the robot
   public ChassisSpeeds getChassisSpeeds() {
-    return kinematics.toChassisSpeeds(getStates());
+    ChassisSpeeds speeds = kinematics.toChassisSpeeds(getStates());
+    Logger.recordOutput("Drive/sensorChassisSpeeds", speeds);
+    return speeds;
   }
 
 

@@ -106,6 +106,8 @@ public class SwerveBase extends SubsystemBase {
       VecBuilder.fill(0.05, 0.05, Units.degreesToRadians(5)),
       VecBuilder.fill(0.5, 0.5, Units.degreesToRadians(30)));
 
+    LimelightHelpers.setPipelineIndex("limelight", 0);
+
 
     // Change how the path-follow PID constants are set depending on network boolean
     PIDConstants translationPIDs;
@@ -283,7 +285,7 @@ public class SwerveBase extends SubsystemBase {
     estimator.update(inputs.zAngle, getPositions());
     LimelightHelpers.SetRobotOrientation("limelight", this.getPose().getRotation().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0);
     PoseEstimate visionEst = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-    if (visionEst != null) {
+    if (visionEst != null && visionEst.tagCount != 0) {
       Logger.recordOutput("Auto/VisionEstimate1", visionEst.pose);
       estimator.addVisionMeasurement(visionEst.pose, visionEst.timestampSeconds);
     }

@@ -11,6 +11,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "l4"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Test path 2"

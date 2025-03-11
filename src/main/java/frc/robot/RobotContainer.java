@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.studica.frc.AHRS;
@@ -44,6 +45,7 @@ public class RobotContainer {
 
   long spinUp;
 
+
   public RobotContainer() {
     deviceFactory();
 
@@ -63,6 +65,13 @@ public class RobotContainer {
     // auto = new autoCmd(swerve);
 
     absCmd = new SwerveAbs(swerve, controller);
+
+    NamedCommands.registerCommand("l4", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}));
+    NamedCommands.registerCommand("IntakeOut", new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
+    NamedCommands.registerCommand("IntakeIn", new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    NamedCommands.registerCommand("IntakeStop", new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
+    NamedCommands.registerCommand("coral", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
+    NamedCommands.registerCommand("stow", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
 
   }
 

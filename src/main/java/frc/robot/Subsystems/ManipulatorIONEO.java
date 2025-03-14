@@ -1,12 +1,14 @@
 package frc.robot.Subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 
 import frc.robot.Constants.elevatorConstants;
 
@@ -14,6 +16,7 @@ public class ManipulatorIONEO implements ManipulatorIO {
 
     SparkMax wristMotor;
     SparkMax rollerMotor;
+    RelativeEncoder absoluteEncoder;
 
     SparkMaxConfig wristConfig;
     SparkMaxConfig rollerConfig;
@@ -27,6 +30,7 @@ public class ManipulatorIONEO implements ManipulatorIO {
     ManipulatorIONEO(SparkMax wristMotor, SparkMax rollerMotor) {
         this.wristMotor = wristMotor;
         this.rollerMotor = rollerMotor;
+        absoluteEncoder = wristMotor.getAlternateEncoder();
 
         // Motor configs ------------------------------------------------
         wristConfig = new SparkMaxConfig();
@@ -35,6 +39,7 @@ public class ManipulatorIONEO implements ManipulatorIO {
         rollerPID = new ClosedLoopConfig();
 
         wristPID.pidf(0,0,0,0);
+        wristPID.feedbackSensor(FeedbackSensor.kAlternateOrExternalEncoder);
         rollerPID.pidf(0,0,0,0);
 
         wristConfig.apply(wristPID);

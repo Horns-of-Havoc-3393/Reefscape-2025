@@ -65,7 +65,9 @@ public class ElvManipSubsystem extends SubsystemBase{
         Logger.processInputs("Elevator", elvInputs);
         Logger.processInputs("Manipulator", manipInputs);
 
-        elvIO.setPosition(elvTarget + elvAdjustment);
+        if(manipInputs.wristCalculatedPosition < 0.23 || elvTarget < 3) {
+            elvIO.setPosition(elvTarget + elvAdjustment);
+        }
         manipIO.setWristPos(wristTarget,0);
 
         if(PIDUpdates<10) {
@@ -102,20 +104,20 @@ public class ElvManipSubsystem extends SubsystemBase{
                 setState(0, -15.5);
                 break;
             case L2:
-                setState(7.8,-18);
+                setState(0.2,-18);
                 break;
             case L3:
-                setState(22.25,-17);
+                setState(0.2,-17);
                 break;
             case L4:
-                setState(42,-16);
+                setState(0.2,-16);
                 break;
             case CORAL:
-                setState(4.238,-9.738);
+                setState(0.460,-9.738);
                 normal_out();
                 break;
             case STOW:
-                setState(0.0,-4.5);
+                setState(0.460,-4.5);
                 stopRollers();
                 break;
             case DISLODGEL:

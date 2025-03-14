@@ -1,14 +1,14 @@
 package frc.robot.Subsystems;
 
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
-import com.revrobotics.spark.config.SparkMaxConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import frc.robot.Constants.elevatorConstants;
 
@@ -75,7 +75,7 @@ public class ManipulatorIONEO implements ManipulatorIO {
     }
 
     public void seedWristPos(double currentRealPosition) {
-        wristOffset = wristMotor.getEncoder().getPosition() - currentRealPosition;
+        wristOffset = wristMotor.getAlternateEncoder().getPosition() - currentRealPosition;
     }
 
     public void setWristPos(double position, double FF) {

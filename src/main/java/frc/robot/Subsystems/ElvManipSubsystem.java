@@ -1,5 +1,7 @@
 package frc.robot.Subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -27,10 +29,22 @@ public class ElvManipSubsystem extends SubsystemBase{
     double elvTarget = 0;
     double elvAdjustment = 0;
 
+    int intakeDelay = 0;
+
 
     public enum setpoints {
         L1, L2, L3, L4, CORAL, STOW, DISLODGEL, DISLODGEH// for algae flicking
     }
+
+    private class beamBreakSupplier implements BooleanSupplier {
+        public boolean getAsBoolean() {
+            System.out.println(manipInputs.beamBreakBack);
+            return !manipInputs.beamBreakBack;
+            // return false;
+        }
+    }
+    
+    public beamBreakSupplier hasCoral;
 
     int PIDUpdates = 0;
 
@@ -55,8 +69,10 @@ public class ElvManipSubsystem extends SubsystemBase{
         wristSetpoint.set(0);
         updatePIDs.set(false);
 
-        elvIO.updatePIDs(elevatorConstants.elvP.get(), elevatorConstants.elvI.get(), elevatorConstants.elvD.get(), 0, elevatorConstants.elvVel.get(), elevatorConstants.elvAccel.get(), elevatorConstants.elvJerk.get());
-        manipIO.updateWristPIDs(elevatorConstants.manipP.get(), elevatorConstants.manipI.get(), elevatorConstants.manipD.get(), elevatorConstants.manipFF.get());
+        elvIO.updatePIDs(elevatorConstants.kelvP, elevatorConstants.kelvI, elevatorConstants.kelvD, 0, elevatorConstants.kelvVel, elevatorConstants.kelvAccel, elevatorConstants.kelvJerk);
+        manipIO.updateWristPIDs(elevatorConstants.kmanipP, elevatorConstants.kmanipI, elevatorConstants.kmanipD, elevatorConstants.kmanipFF);
+
+        hasCoral = new beamBreakSupplier();
     }
     
     public void periodic() {
@@ -65,10 +81,12 @@ public class ElvManipSubsystem extends SubsystemBase{
         Logger.processInputs("Elevator", elvInputs);
         Logger.processInputs("Manipulator", manipInputs);
 
-        if(manipInputs.wristCalculatedPosition < 0.23 || elvTarget < 3) {
+        if(manipInputs.wristCalculatedPosition < -0.23 || elvTarget < 4) {
             elvIO.setPosition(elvTarget + elvAdjustment);
         }
-        manipIO.setWristPos(wristTarget,0);
+        if(elvInputs.motor1OffsetPosition < 4 || wristTarget < -0.23) {
+            manipIO.setWristPos(wristTarget,0);
+        }
 
         if(PIDUpdates<10) {
 
@@ -100,33 +118,33 @@ public class ElvManipSubsystem extends SubsystemBase{
 
     public void gotoSetpoint(setpoints target) {
         switch(target) {
-            case L1:
-                setState(0, -15.5);
-                break;
             case L2:
-                setState(0.2,-18);
+                setState(0, -0.2);
                 break;
             case L3:
-                setState(0.2,-17);
+                setState(14.3,-0.25);
                 break;
             case L4:
-                setState(0.2,-16);
+                setState(34.9,-0.25);
+                break;
+            case L1:
+                setState(42,-0.25);
                 break;
             case CORAL:
-                setState(0.460,-9.738);
-                normal_out();
+                setState(4.238,0.0);
+                normal_in();
                 break;
             case STOW:
-                setState(0.460,-4.5);
+                setState(0.0,0.0);
                 stopRollers();
                 break;
             case DISLODGEL:
                 setState(4.0,-20);
-                normal_in();
+                normal_out();
                 break;
             case DISLODGEH:
                 setState(17.7, -20);
-                normal_in();
+                normal_out();
                 break;
         }
     }
@@ -140,7 +158,19 @@ public class ElvManipSubsystem extends SubsystemBase{
         manipIO.setRollerSpeed(0.75);
     }
     public void normal_in(){
-        manipIO.setRollerSpeed(-0.75);
+        System.out.println(manipInputs.beamBreakBack);
+        if(manipInputs.beamBreakBack && manipInputs.beamBreakFwd) {
+            manipIO.setRollerSpeed(-1);
+            intakeDelay = 0;
+        }else if(manipInputs.beamBreakBack && !manipInputs.beamBreakFwd){
+            if(intakeDelay>7) {
+                manipIO.setRollerSpeed(-0.5);
+            }
+            intakeDelay++;
+        } else {
+            manipIO.setRollerSpeed(0);
+            intakeDelay = 0;
+        }
     }
     public void stopRollers(){
         manipIO.setRollerSpeed(0);

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Commands.autoCmd;
 
 import java.util.Iterator;
 import java.util.List;
@@ -133,6 +134,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     robotContainer.swerve.zeroGyro();
+    // new autoCmd(robotContainer.swerve).schedule();
     chooser.get().schedule();
   }
 

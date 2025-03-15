@@ -8,8 +8,10 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.ClosedLoopConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants.elevatorConstants;
 
 public class ManipulatorIONEO implements ManipulatorIO {
@@ -24,6 +26,9 @@ public class ManipulatorIONEO implements ManipulatorIO {
     ClosedLoopConfig wristPID;
     ClosedLoopConfig rollerPID;
 
+    DigitalInput beamBreakBack = new DigitalInput(1);
+    DigitalInput beamBreakFront = new DigitalInput(0);
+
     double wristOffset;
 
     
@@ -34,8 +39,15 @@ public class ManipulatorIONEO implements ManipulatorIO {
 
         // Motor configs ------------------------------------------------
         wristConfig = new SparkMaxConfig();
+        wristConfig.alternateEncoder.setSparkMaxDataPortConfig();
+        wristConfig.alternateEncoder.countsPerRevolution(8192);
+        wristConfig.softLimit.forwardSoftLimitEnabled(true);
+        wristConfig.softLimit.reverseSoftLimitEnabled(true);
+        wristConfig.softLimit.forwardSoftLimit(0);
+        wristConfig.softLimit.reverseSoftLimit(-0.6);
         wristPID = new ClosedLoopConfig();
         rollerConfig = new SparkMaxConfig();
+        rollerConfig.idleMode(IdleMode.kBrake);
         rollerPID = new ClosedLoopConfig();
 
         wristPID.pidf(0,0,0,0);
@@ -47,20 +59,21 @@ public class ManipulatorIONEO implements ManipulatorIO {
 
         applyConfigs();
         // --------------------------------------------------------------
+
     }
 
     private void applyConfigs() {
         wristMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-        rollerMotor.configure(wristConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+        rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
     public void updateInputs(ManipulatorIOIn inputs) {
-        inputs.beamBreakFwd = false;
-        inputs.beamBreakBack = false;
+        inputs.beamBreakFwd = beamBreakFront.get();
+        inputs.beamBreakBack = beamBreakBack.get();
 
         inputs.wristMotorRawPosition = wristMotor.getEncoder().getPosition();
         inputs.wristMotorOffsetPosition = inputs.wristMotorRawPosition - wristOffset;
-        inputs.wristCalculatedPosition = inputs.wristMotorOffsetPosition * elevatorConstants.wristDriveRatio;
+        inputs.wristCalculatedPosition = absoluteEncoder.getPosition();
         inputs.wristMotorAngularVelocity = wristMotor.getEncoder().getVelocity();
         inputs.wristMotorDutyCycle = wristMotor.getAppliedOutput();
         inputs.wristMotorCurrent = wristMotor.getOutputCurrent();
@@ -79,7 +92,7 @@ public class ManipulatorIONEO implements ManipulatorIO {
     }
 
     public void setWristPos(double position, double FF) {
-        wristMotor.getClosedLoopController().setReference(position+wristOffset, ControlType.kPosition, ClosedLoopSlot.kSlot0, FF);
+        wristMotor.getClosedLoopController().setReference(position, ControlType.kPosition, ClosedLoopSlot.kSlot0, FF);
     }
 
     public void setRollerSpeed(double speed) {

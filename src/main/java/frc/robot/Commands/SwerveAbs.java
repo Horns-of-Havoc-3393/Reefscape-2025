@@ -64,6 +64,10 @@ public class SwerveAbs extends Command {
     if (controller.leftBumper().getAsBoolean()) {
       maxSpeed = maxSpeed/3;  
     }
+    double maxAngularSpeed = driveConstants.maxRotRPS.get();
+    if (controller.rightBumper().getAsBoolean()) {
+      maxAngularSpeed = maxAngularSpeed*4;
+    }
     if ((Math.pow(controller.getLeftY(), 2)
             + Math.pow(controller.getLeftX(), 2)
             + Math.pow(controller.getRightX(), 2))
@@ -71,9 +75,9 @@ public class SwerveAbs extends Command {
       
       ChassisSpeeds speeds = 
           new ChassisSpeeds(
-              xLimit.calculate(controller.getLeftY() * maxSpeed),
-              yLimit.calculate(controller.getLeftX() * maxSpeed),
-              rLimit.calculate(controller.getRightX() * -1 *driveConstants.maxRotRPS.get()));
+              xLimit.calculate(controller.getLeftY() * -1 * maxSpeed),
+              yLimit.calculate(controller.getLeftX() * -1 * maxSpeed),
+              rLimit.calculate(controller.getRightX() * -1 * maxAngularSpeed));
 
 
       swerve.setFieldOrientedSpeeds(speeds,maxSpeed);

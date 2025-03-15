@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.BooleanSupplier;
+
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -66,9 +68,11 @@ public class RobotContainer {
 
     absCmd = new SwerveAbs(swerve, controller);
 
+    ;
+
     NamedCommands.registerCommand("l4", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L4);}));
     NamedCommands.registerCommand("IntakeOut", new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
-    NamedCommands.registerCommand("IntakeIn", new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    NamedCommands.registerCommand("IntakeIn", new RunCommand(() -> {elvManSub.normal_in();}, elvManSub).until(elvManSub.hasCoral).andThen(() -> {elvManSub.stopRollers();}));
     NamedCommands.registerCommand("IntakeStop", new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
     NamedCommands.registerCommand("coral", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
     NamedCommands.registerCommand("stow", new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
@@ -78,11 +82,11 @@ public class RobotContainer {
   private void configureBinds() {
     controller.y().onTrue(new InstantCommand(() -> {swerve.zeroGyro();}, swerve));
 
-    armOperater.rightBumper().onTrue(new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
+    armOperater.rightBumper().whileTrue(new RunCommand(() -> {elvManSub.normal_in();}, elvManSub));
     armOperater.rightBumper().onFalse(new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
-    armOperater.leftBumper().onTrue(new InstantCommand(() -> {elvManSub.normal_in();}, elvManSub));
+    armOperater.leftBumper().onTrue(new InstantCommand(() -> {elvManSub.normal_out();}, elvManSub));
     armOperater.leftBumper().onFalse(new InstantCommand(() -> {elvManSub.stopRollers();}, elvManSub));
-    armOperater.start().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
+    armOperater.start().whileTrue(new RunCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.CORAL);}, elvManSub));
     armOperater.start().onFalse(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.STOW);}, elvManSub));
     armOperater.a().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L1);}, elvManSub));
     armOperater.x().onTrue(new InstantCommand(() -> {elvManSub.gotoSetpoint(ElvManipSubsystem.setpoints.L2);}, elvManSub));

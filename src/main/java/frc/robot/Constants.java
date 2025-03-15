@@ -64,11 +64,11 @@ public final class Constants {
 
     // Default values for these constants should be set in initLiveConstants() below
     public static final LoggedNetworkNumber maxSpeedMPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralMaxSpeed");
-    public static final double kmaxSpeedMPS = 4.0;
+    public static final double kmaxSpeedMPS = 5.0;
     public static final LoggedNetworkNumber maxRotRPS = new LoggedNetworkNumber("/SmartDashboard/Control/AngularMaxSpeed");
     public static final double kmaxRotRPS = 5.0;
     public static final LoggedNetworkNumber lateralAccelLimitMPSPS = new LoggedNetworkNumber("/SmartDashboard/Control/LateralAccel");
-    public static final double klateralAccelLimitMPSPS = 4.0;
+    public static final double klateralAccelLimitMPSPS = 8.0;
     public static final LoggedNetworkNumber rotationalAccelLimitRPSPS = new LoggedNetworkNumber("/SmartDashboard/Control/AngularAccel");
     public static final double krotationalAccelLimitRPSPS = 20.0;
 
@@ -123,7 +123,7 @@ public final class Constants {
     public static double rollerDiameter = 2; // Diameter of rollers
 
     public static final LoggedNetworkNumber elvP = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvP");
-    public static final double kelvP = 0.1;
+    public static final double kelvP = 0.1; //0.1
     public static final LoggedNetworkNumber elvI = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvI");
     public static final double kelvI = 0.0;
     public static final LoggedNetworkNumber elvD = new LoggedNetworkNumber("/SmartDashboard/PIDs/elvD");
